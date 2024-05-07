@@ -1,0 +1,28 @@
+*  --- Lógica del script --- 
+ * 
+ * Establece conexión a la base de datos PDO
+ * Si el usuario ya está validado
+ *   Si se solicita cerrar la sesión
+ *     Destruyo la sesión
+ *     Invoco la vista del formulario de login
+ *    Sino redirección a juego para jugar una partida
+ *  Sino 
+ *   Si se pide procesar los datos del formulario
+ *       Lee los valores del formulario
+ *       Si los credenciales son correctos
+ *       Redirijo al cliente al script de juego con una nueva partida
+ *        Sino Invoco la vista del formulario de login con el flag de error
+ *   
+  --22.1--Sino si se solicita el formulario de registro
+ *     Invoco la vista del formulario de registro
+ *    Sino si se solicita procesar el formulario de registro
+ *     Leo los datos
+ *     Establezco flags de error
+ *     Si hay errores
+ *        Invoco la vista de formulario de registro  con información sobre los errores
+ *      Sino persisto el usuario en la base de datos
+ *          Invoco la vista de formulario de login -/22.1/-
+
+ *   Sino (En cualquier otro caso)
+ *      Invoco la vista del formulario de login
+ */

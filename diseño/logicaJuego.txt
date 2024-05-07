@@ -1,0 +1,20 @@
+/**
+ *  --- Lógica del script --- 
+ * 
+ * Establece conexión a la base de datos PDO
+ * Si el usuario ya está validado
+ *   Si se pide jugar con una letra
+ *     Leo la letra
+ *     Si no hay error en la letra introducida
+ *       Solicito a la partida que compruebe la letra
+ *     Invoco la vista de juego con los datos obtenidos
+ *   --22.1--Sino si se solicita una pista
+ *     Obtengo una pista para la partida
+ *     Envío la pista en JSON al cliente
+ *   Sino si se solicita una nueva partida
+ *     Se crea una nueva partida
+ *     Invoco la vista del juego para empezar a jugar
+ *   Sino Invoco la vista de juego
+ *  Sino (En cualquier otro caso)
+ *      Invoco la vista del formulario de login-/22.1/-
+ */
