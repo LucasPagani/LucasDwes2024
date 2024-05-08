@@ -24,7 +24,7 @@
                 <div class="mb-3 row">                            
                     <label for="inputNombre" class="col-sm-2 col-form-label">Nombre</label>
                     <div class="col-sm-10">
-                        <input id="inputNombre" type="text" value="{{ $nombre ?? }}"
+                        <input id="inputNombre" type="text" value="{{ $nombre ?? ""}}"
                                class="form-control col-sm-10 {{ isset($errorNombre) ? ($errorNombre ? "is-invalid" : "is-valid") : "" }}" 
                                id="inputNombre" placeholder="Nombre" name="nombre">
                         <div class="col-sm-10 invalid-feedback">
@@ -35,7 +35,7 @@
                 <div class="mb-3 row">
                     <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
                     <div class="col-sm-10">
-                        <input type="password" value="{{ $clave ?? }}"
+                        <input type="password" value="{{ $clave ?? ""}}"
                                class="form-control col-sm-10 {{ isset($errorPassword) ? ($errorPassword ? "is-invalid" : "is-valid") : "" }}" id="inputPassword" placeholder="Password" name="clave">
                         <div class="col-sm-10 invalid-feedback">
                             El password debe estar compuesto por 6 dígitos
@@ -45,7 +45,7 @@
                 <div class="mb-3 row">
                     <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                     <div class="col-sm-10">
-                        <input type="email" value="{{ $email ??  }}"
+                        <input type="email" value="{{ $email ?? "" }}"
                                class="form-control col-sm-10 {{ isset($errorEmail) ? (($errorEmail) ? "is-invalid" : "is-valid") : "" }}" id="inputEmail" placeholder="Email" name="email">
                         <div class="col-sm-10 invalid-feedback">
                             El email debe tener el formato correcto
