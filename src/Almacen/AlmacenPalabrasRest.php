@@ -6,17 +6,17 @@ class AlmacenPalabrasRest implements AlmacenPalabrasInterface {
     /**
      * @var string $url URL al servicio REST
      */
-    private string $url;
+    private string $rest;
 
     /**
      * Constructor de la clase AlmacenPalabrasRest
      *
-     * @param string $url URL al servicio REST
+     * @param string $rest URL al servicio REST
      *
      * @return AlmacenPalabrasRest
      */
-    public function __construct(string $url) {
-        $this->url = $url;
+    public function __construct(string $rest) {
+        $this->rest = $rest;
     }
 
     /**
@@ -26,7 +26,7 @@ class AlmacenPalabrasRest implements AlmacenPalabrasInterface {
      */
     public function obtenerPalabraAleatoria(): string {
         // Realiza una solicitud HTTP GET al servicio REST para obtener una palabra aleatoria
-        $response = file_get_contents($this->url);
+        $response = file_get_contents($this->rest);
         if ($response === false) {
             // Manejo de errores
             return ""; // Devuelve una cadena vacía en caso de error

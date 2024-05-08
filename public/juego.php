@@ -26,7 +26,7 @@ use eftec\bladeone\BladeOne;
 use Dotenv\Dotenv;
 use App\Modelo\Hangman;
 use App\Almacen\AlmacenPalabrasRest;
-//use App\Almacen\AlmacenPalabrasFichero;
+//use App\Almacen\AlmacenPalabrasFichero; // para usar con fichero nomrmal
 //use App\Almacen\AlmacenPalabrasSoap;   //Para usar con el la opcion de servicio Soap
 
 session_start();
@@ -82,8 +82,8 @@ if (isset($_SESSION['usuario'])) {
         die;
     } 
     elseif (isset($_REQUEST['botonnuevapartida'])) {
-        $url_servicio_rest = $_ENV['URL_ALMACEN_PALABRAS_REST'];
-        $almacenPalabras = new AlmacenPalabrasRest($url_servicio_rest);
+        $rest = $_ENV['REST_ALMACEN_PALABRAS'];
+        $almacenPalabras = new AlmacenPalabrasRest($rest);
         $partida = new Hangman($almacenPalabras, MAX_NUM_ERRORES);
         $_SESSION['partida'] = $partida;   
 // Invoco la vista del juego para empezar a jugar
