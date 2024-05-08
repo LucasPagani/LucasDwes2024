@@ -71,3 +71,7 @@ class UsuarioDAO {
     }
 
 }
+
+/** aqui crear un metodo para recuperarusuario por rol "recuperaPorRol()", con este metodo desde la vista loginAdministrador podemos ingresar si somos administradores
+ * 
+ */

@@ -120,7 +120,8 @@ if (isset($_SESSION['usuario'])) {
             echo $blade->run("juego", compact('usuario', 'partida'));
             die();
         }
-    } elseif (isset($_REQUEST['botonbaja'])) { // Si se solicita la baja del usuario
+    } 
+    elseif (isset($_REQUEST['botonbaja'])) { // Si se solicita la baja del usuario
         $usuario = $_SESSION['usuario'];
         $usuarioDAO->elimina($usuario->getId());
         session_unset();
@@ -153,7 +154,13 @@ else {
             // Redirijo al cliente al script de juego con una nueva partida
             header("Location:juego.php?botonnuevapartida");
             die;
-        }
+        }/**
+         * si invoco el boton Administrdor -> blade loginAdmin que es un formulario igual a login pero con el campo a rellenar de administrador
+         */
+        
+        /** si el el usuario tiene el rol administrador redirige al blade perfil del administrador, 
+         * donde puede ver todos los usuarios, crear usuarios y asignar roles, modificar y eliminar
+         */
         // Si los credenciales son incorrectos
         else {
             // Invoco la vista del formulario de login con el flag de error activado
@@ -190,7 +197,8 @@ else {
             echo $blade->run("formlogin" , ['mensaje' => 'Usuario creado con éxito']);
             die();
         }
-    } else {
+    } 
+    else {
         // Invoco la vista del formulario de login
         echo $blade->run("formlogin");
         die;
