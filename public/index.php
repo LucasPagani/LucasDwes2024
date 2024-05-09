@@ -190,7 +190,23 @@ else {
             echo $blade->run("formlogin" , ['mensaje' => 'Usuario creado con éxito']);
             die();
         }
-    } else {
+    } 
+    elseif (isset($_REQUEST['botonprocloginAdmin'])){
+        /** Aqui voy a a indicar que redirija a la vista de login como administrador */
+    }elseif (isset($_REQUEST['botonprologinAdmin'])){
+        /**ya en la vista de login administrador tiene que tener los mismos campos que login pero con una
+         * adicional en el que indique el rol "administrador" el cual a la hora de validar tiene que 
+         * coincidir el id del usuario con el rol administrador
+         * -luego me redirige a la vista personalizada del administrador donde puede visualizar todos
+         * usuarios y realizar un crud  */
+    }elseif (isset($_REQUEST['botonEliminarUsuario'])){
+        /** aqui creamos un delete con el id del usuario  */
+    }elseif (isset($_REQUEST['botonCrearUsuario'])){
+        /** aqui creamos un Crear con el id del usuario  */
+    }elseif (isset($_REQUEST['botonModificarUsuario'])){
+        /** aqui creamos un Modificar con el id del usuario  */
+    }
+    else {
         // Invoco la vista del formulario de login
         echo $blade->run("formlogin");
         die;
