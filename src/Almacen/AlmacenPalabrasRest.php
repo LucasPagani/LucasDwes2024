@@ -1,39 +1,36 @@
 <?php
+
 namespace App\Almacen;
 
 class AlmacenPalabrasRest implements AlmacenPalabrasInterface {
 
     /**
-     * @var string $url URL al servicio REST
+     * @var array Lista de palabras con las que poder jugar
      */
-    private string $rest;
+    private array $listaPalabras;
 
     /**
-     * Constructor de la clase AlmacenPalabrasRest
+     * Constructor de la clase AlmacenPalabrasFichero
      *
-     * @param string $rest URL al servicio REST
+     * Lee todas las palabras del archivo JSON indicado en la ruta y las almacena en la propiedad $listaPalabras
      *
-     * @return AlmacenPalabrasRest
+     * @param string $rest Ruta relativa al archivo JSON de palabras
+     * @returns AlmacenPalabrasFichero
      */
     public function __construct(string $rest) {
-        $this->rest = $rest;
+        $contenidoJSON = file_get_contents($rest);
+        $datos = json_decode($contenidoJSON, true);
+
+        // Asigna las palabras del archivo JSON a la propiedad $listaPalabras
+        $this->listaPalabras = $datos['palabras'] ?? [];
     }
 
     /**
-     * Obtiene una palabra aleatoria del servicio REST
+     * Obtiene una palabra aleatoria
      *
-     * @return string Palabra aleatoria
+     * @returns string Palabra aleatoria
      */
     public function obtenerPalabraAleatoria(): string {
-        // Realiza una solicitud HTTP GET al servicio REST para obtener una palabra aleatoria
-        $response = file_get_contents($this->rest);
-        if ($response === false) {
-            // Manejo de errores
-            return ""; // Devuelve una cadena vacía en caso de error
-        }
-        // Decodifica la respuesta JSON y devuelve la palabra aleatoria
-        $data = json_decode($response, true);
-        return isset($data['word']) ? $data['word'] : ""; // Suponiendo que el JSON devuelto tiene una clave 'word' para la palabra aleatoria
+        return $this->listaPalabras[array_rand($this->listaPalabras)];
     }
 }
-

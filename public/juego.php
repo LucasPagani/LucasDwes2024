@@ -72,7 +72,7 @@ if (isset($_SESSION['usuario'])) {
         // Sigo jugando
         echo $blade->run("juego", compact('usuario', 'partida', 'error'));
         die;
-// Sino si se solicita una nueva partida
+
     } 
     elseif (isset($_REQUEST['botonpista'])) {
         $partida = $_SESSION['partida'];
@@ -80,7 +80,7 @@ if (isset($_SESSION['usuario'])) {
         header('Content-type: application/json');
         echo json_encode(['letra' => $pista]);
         die;
-    } 
+    } // Sino si se solicita una nueva partida
     elseif (isset($_REQUEST['botonnuevapartida'])) {
         $rest = $_ENV['REST_ALMACEN_PALABRAS'];
         $almacenPalabras = new AlmacenPalabrasRest($rest);
