@@ -1,14 +1,11 @@
 {{-- Usamos la vista app como plantilla --}}
 @extends('app')
 {{-- Sección aporta el título de la página --}}
-@section('title', 'Formulario login')
+@section('title', 'Formulario login Administrador')
 {{-- Sección aporta el enlace de autoregistro --}}
 @section('navbar')
 <li class="nav-item">
-    <a class="nav-link" aria-current="page" href="index.php?botonregistro">Regístrate</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" aria-current="page" href="index.php?botonloginAdmin">Login Administrador</a>
+    <a class="nav-link" aria-current="page" href="index.php?botonlogin">Login</a>
 </li>
 @endsection
 @section('usermenu')
@@ -23,7 +20,7 @@
         @if (isset($error)) 
         <div class="alert alert-danger" role="alert">Error Credenciales</div>
         @endif
-        <h2 class="text-center">Login</h2>
+        <h2 class="text-center">Login Administrador</h2>
         <div class="panel-body mt-3">
             <form class="form-horizontal" method="POST" action="index.php" id='formlogin'>
                 <div class="mb-3 row">                            
@@ -40,9 +37,16 @@
                                class="form-control col-sm-10" id="inputPassword" placeholder="Password" name="clave">
                     </div>        
                 </div>
+                <div class="mb-3 row">
+                    <label for="inputRol" class="col-sm-2 col-form-label">Rol</label>
+                    <div class="col-sm-10">
+                        <input type="text"
+                               class="form-control col-sm-10" id="inputRol" placeholder="Rol" name="rol">
+                    </div>        
+                </div>
                 <div class="mb-3">
                     <div class="col-md-8 col-md-offset-4">
-                        <input type="submit" class="btn btn-primary" name="botonproclogin" value="Login">
+                        <input type="submit" class="btn btn-primary" name="botonprologinAdmin" value="Login">
                     </div>
                 </div>
             </form>

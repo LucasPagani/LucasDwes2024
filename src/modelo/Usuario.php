@@ -26,8 +26,17 @@ class Usuario {
      * @var string $email Email del usuario
      */
     private string $email;
+    
+    public function getRol(): string {
+        //si hay un rol lo devuelvo sino indica el rol Jugador
+        return $this->rol ?? 'Jugador';
+    }
 
-    /**
+    public function setRol(string $rol): void {
+        $this->rol = $rol;
+    }
+
+        /**
      * Constructor de la clase Usuario
      * 
      * @param string $nombre Nombre del usuario

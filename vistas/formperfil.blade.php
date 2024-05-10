@@ -49,6 +49,16 @@
                         </div>
                     </div>        
                 </div>
+               <!-- <div class="mb-3 row">
+                    <label for="inputEmail" class="col-sm-2 col-form-label">Rol</label>
+                    <div class="col-sm-10">
+                        <input type="text" value=""
+                               class="form-control col-sm-10 {{ isset($errorEmail) ? (($errorEmail) ? "is-invalid" : "is-valid") : "" }}" id="inputEmail" placeholder="Email" name="email">
+                        <div class="col-sm-10 invalid-feedback">
+                            El correo debe tener un formato válido y pertenecer al dominio .es
+                        </div>
+                    </div>        
+                </div>-->
                 <div class="mb-3">
                     <div class="col-md-8 col-md-offset-4">
                         <input type="submit" class="btn btn-primary" name="botonprocperfil" value="Modifica Perfil">

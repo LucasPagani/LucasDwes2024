@@ -22,15 +22,14 @@ class UsuarioDAO {
     public function __construct(PDO $bd) {
         $this->bd = $bd;
     }
-    
-     /**
+
+    /**
      * Inserta un objeto usuario en la tabla usuarios
      * 
      * @param Usuario $usuario Usuario a persistir 
      * 
      * @returns bool Resultado de la operación de inserción
      */
-
     public function crea(Usuario $usuario): bool {
         $sql = "insert into usuarios (nombre, clave, email) values (:nombre, :clave, :email)";
         $sth = $this->bd->prepare($sql);
@@ -70,4 +69,23 @@ class UsuarioDAO {
         return $usuario;
     }
 
+    public function recuperaPorRol(string $nombre, string $pwd, string $rol): ?Usuario {
+        $this->bd->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
+        $sql = 'select * from usuarios where nombre=:nombre and clave=:pwd and rol=:rol';
+        $sth = $this->bd->prepare($sql);
+        $sth->execute([":nombre" => $nombre, ":pwd" => $pwd, ":rol" => $rol]);
+        $sth->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Usuario::class);
+        $usuario = ($sth->fetch()) ?: null;
+        return $usuario;
+    }
+
+    public function obtenerTodos(): array {
+        $sql = "select * from usuarios";
+        $stmt = $this->bd->prepare($sql);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Usuario::class);
+        $usuarios = $stmt->fetchAll();
+        $stmt->closeCursor();
+        return $usuarios;
+    }
 }

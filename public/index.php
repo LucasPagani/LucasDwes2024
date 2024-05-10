@@ -120,7 +120,8 @@ if (isset($_SESSION['usuario'])) {
             echo $blade->run("juego", compact('usuario', 'partida'));
             die();
         }
-    } elseif (isset($_REQUEST['botonbaja'])) { // Si se solicita la baja del usuario
+    } 
+    elseif (isset($_REQUEST['botonbaja'])) { // Si se solicita la baja del usuario
         $usuario = $_SESSION['usuario'];
         $usuarioDAO->elimina($usuario->getId());
         session_unset();
@@ -151,7 +152,7 @@ else {
         if ($usuario) {
             $_SESSION['usuario'] = $usuario;
             // Redirijo al cliente al script de juego con una nueva partida
-            header("Location:juego.php?botonnuevapartida");
+            header("perfila");
             die;
         }
         // Si los credenciales son incorrectos
@@ -191,20 +192,85 @@ else {
             die();
         }
     } 
-    elseif (isset($_REQUEST['botonprocloginAdmin'])){
+    elseif (isset($_REQUEST['botonloginAdmin'])){
         /** Aqui voy a a indicar que redirija a la vista de login como administrador */
-    }elseif (isset($_REQUEST['botonprologinAdmin'])){
+        echo $blade->run("formLoginAdmin");
+        die;
+    }
+    elseif (isset($_REQUEST['botonprologinAdmin'])){
         /**ya en la vista de login administrador tiene que tener los mismos campos que login pero con una
          * adicional en el que indique el rol "administrador" el cual a la hora de validar tiene que 
          * coincidir el id del usuario con el rol administrador
          * -luego me redirige a la vista personalizada del administrador donde puede visualizar todos
          * usuarios y realizar un crud  */
-    }elseif (isset($_REQUEST['botonEliminarUsuario'])){
-        /** aqui creamos un delete con el id del usuario  */
-    }elseif (isset($_REQUEST['botonCrearUsuario'])){
-        /** aqui creamos un Crear con el id del usuario  */
-    }elseif (isset($_REQUEST['botonModificarUsuario'])){
-        /** aqui creamos un Modificar con el id del usuario  */
+         // Lee los valores del formulario
+        $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
+        $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
+        $rol = trim(filter_input(INPUT_POST, 'rol', FILTER_UNSAFE_RAW));
+        $usuario = $usuarioDAO->recuperaPorRol($nombre, $clave,$rol);
+        $usuarios= $usuarioDAO->obtenerTodos();
+        // Si los credenciales son correctos
+        if ($usuario) {
+            $_SESSION['usuario'] = $usuario;
+                       
+            // Redirijo al administrador al script privado 
+           echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Bienvenido Administrador']);
+
+            die;
+        }
+        // Si los credenciales son incorrectos
+        else {
+            // Invoco la vista del formulario de login con el flag de error activado
+            echo $blade->run("formloginAdmin", ['error' => true]);
+            die;
+        }
+    }
+    elseif (isset($_REQUEST['botonEliminarUsuario'])){
+        /** aqui eliminamos un delete con el id del usuario seleccionado */
+    }
+    elseif (isset($_REQUEST['botonCrearUsuario'])){
+         
+        /** aqui creamos un creamos con el id del usuario y modificamos el perfil administrador 
+         * que me lleve a la vista formperfil
+         * a hasy que modificar y poder agregare el rol administrador
+         * 
+         * en la vista original el campo rol tiene que estar oculto, type hidden
+         * 
+         * pero al ivoorlo desde aqui poder ver el campo rol  */  
+        
+        $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
+        $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
+        $email = trim(filter_input(INPUT_POST, 'email', FILTER_UNSAFE_RAW));
+        $rol = trim(filter_input(INPUT_POST, 'rol', FILTER_UNSAFE_RAW));
+        $errorNombre = empty($nombre) || !esNombrerValido($nombre);
+        $errorPassword = empty($clave) || !esPasswordValido($clave);
+        $errorEmail = !esEmailValido($email);
+        $errorRol = !esEmailValido($rol);
+        $error = $errorNombre || $errorPassword || $errorEmail ||$errorRol;
+        if ($error) {
+            echo $blade->run("formregistro", compact('nombre', 'clave', 'email', 'rol' ,'errorNombre', 'errorPassword', 'errorEmail', 'errorRol'));
+            die;
+        } 
+        else {
+            $usuario = new Usuario($nombre, $clave, $email ,$rol);
+            try {
+                $usuarioDAO->crea($usuario);
+            } catch (PDOException $e) {
+                echo $blade->run("formregistro", ['errorBD' => true]);
+                die();
+            }
+            echo $blade->run("formlogin" , ['mensaje' => 'Usuario creado con éxito']);
+            die();
+        }
+    }
+    elseif (isset($_REQUEST['botonModificarUsuario'])){
+        /** aqui creamos un Modificar con el id del usuario y modificamos el perfil administrador 
+         * que me lleve a la vista formperfil
+         * a hasy que modificar y poder agregare el rol administrador
+         * 
+         * en la vista original el campo rol tiene que estar oculto, type hidden
+         * 
+         * pero al ivoorlo desde aqui poder ver el campo rol  */
     }
     else {
         // Invoco la vista del formulario de login
@@ -212,3 +278,6 @@ else {
         die;
     }
 }
+
+
+/** ME FALTA CREAR METODOS O REUTILIZAR LOS QUE YA ESTAN PARA CREACION DE USUARIOS, MODIFICACION Y ELIMINAR*/
