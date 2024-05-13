@@ -8,7 +8,7 @@
     <a class="nav-link" aria-current="page" href="index.php?botonregistro">Regístrate</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" aria-current="page" href="index.php?botonloginAdmin">Login Administrador</a>
+    <a class="nav-link" aria-current="page" href="admin.php?botonloginAdmin">Login Administrador</a>
 </li>
 @endsection
 @section('usermenu')

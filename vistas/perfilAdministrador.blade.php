@@ -4,6 +4,13 @@
 {{-- Sección aporta el título de la página --}}
 @section('title', 'Perfil Administrador')
 
+{{-- Sección para el autoregistro de usuarios --}}
+@section ('navbar')
+<li class='nav-item'>
+    <a class='nav-link' aria-current='page' href='index.php?botonprocloginadmin'>Salir</a>
+</li>
+@endsection
+
 {{-- Sección muestra puntuación de las partidas --}}
 @section('content')
 <div class="container">
@@ -17,14 +24,13 @@
     <div class="row">
         <div class="col-12">
             
-                <a class="btn btn-secondary m2" aria-current="page" href="index.php?botonregistro">Crear Usuario</a>
+                <a class="btn btn-secondary m2" aria-current="page" href="admin.php?botonCrearUsuario">Crear Usuario</a>
             
                 <table class="table">
                 <thead>
                     <tr>  
                         <th scope="col">ID</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Clave</th>
+                        <th scope="col">Nombre</th>                        
                         <th scope="col">email</th>
                         <th scope="col">Rol</th>
                         <th scope="col">Acciones</th>
@@ -34,15 +40,14 @@
                     @foreach($usuarios ?? [] as $item)
                     <tr class=" text-center">   
                         <td>{{$item->getId()}}</td>
-                        <td>{{$item->getNombre()}}</td>
-                        <td>{{$item->getClave()}}</td>
+                        <td>{{$item->getNombre()}}</td>                        
                         <td>{{$item->getEmail()}}</td>
                         <td>{{$item->getRol()}}  </td>
                         <td>
                             <form action="" method='POST' class="d-inline">
-                                <input type="submit" class="btn btn-warning m2" value="Actualizar" name="botonModificarUsuario" >
+                                <input type="submit" class="btn btn-warning m2" value="Es Admiin" name="otorgarRolAdmin" >
                                 <input type="hidden" name="id" value="{{$item->getId()}}"> <!-- mandamos el código del producto a borrar -->
-                                <input type="submit" onclick="return confirm('¿Borrar Producto?')"  href="index.php?botonbaja"class="btn btn-danger" value="Borrar" name="borrar">
+                                <input type="submit" onclick="return confirm('¿Borrar Producto?')"  href="admin.php?botonEliminarUsuario"class="btn btn-danger" value="Borrar" name="botonEliminarUsuario">
                                
                             </form>
                         </td>

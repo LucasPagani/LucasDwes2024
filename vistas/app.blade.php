@@ -23,11 +23,11 @@
                         <li><a class="dropdown-item" href="index.php?botonlogout">Logout</a></li>
                         <li><a class="dropdown-item" href="index.php?botonperfil">Perfil</a></li>
                         <li><a class="dropdown-item" href="index.php?botonbaja">Baja</a></li>
-                        <!-- comment    @if (isset($_SESSION['usuario']) && $_SESSION['usuario']->getRol() == 'administrador')
-                         <li><a class="dropdown-item" href="index.php?botonprologinAdmin">EspacioAdmin</a></li>
-                         @endif-->
+                        @if (isset($_SESSION['usuario']) && $_SESSION['usuario']->getRol() == 'administrador')
+                        <li><a class="dropdown-item" href="perfilAdministrador.blade.php">Espacio Admin</a></li>
+                        @endif
                     </ul>
-                    
+
                 </div>
                 @show
             </div>

@@ -6,7 +6,7 @@ namespace App\Modelo;
  * Clase que representa al usuario que está usando la aplicación
  */
 class Usuario {
-
+    
     /**
      * @var string $id identificador del usuario
      */
@@ -18,34 +18,30 @@ class Usuario {
     private string $nombre;
 
     /**
-     * @var string $clave Clave del usuario
+     * @var string $pwd Pwd del usuario
      */
     private string $clave;
 
     /**
      * @var string $email Email del usuario
      */
-    private string $email;
-    
-    public function getRol(): string {
-        //si hay un rol lo devuelvo sino indica el rol Jugador
-        return $this->rol ?? 'Jugador';
-    }
+    private ?string $email;
 
-    public function setRol(string $rol): void {
-        $this->rol = $rol;
-    }
-
-        /**
+    /**
      * Constructor de la clase Usuario
      * 
      * @param string $nombre Nombre del usuario
-     * @param string $clave Clave del usuario
+     * @param string $pwd Pwd del usuario
      * @param string $email Email del usuario
      * 
      * @returns Hangman
      */
-    public function __construct(?string $nombre = null, ?string $clave = null, ?string $email = null) {
+    
+    private string $rol;
+    
+    
+    public function __construct(string $nombre = null, string $clave = null, ?string $email = null, string $rol = null) {
+        
         if (!is_null($nombre)) {
             $this->nombre = $nombre;
         }
@@ -54,6 +50,9 @@ class Usuario {
         }
         if (!is_null($email)) {
             $this->email = $email;
+        }
+        if (!is_null($rol)) {
+            $this->rol = $rol;
         }
     }
 
@@ -74,6 +73,11 @@ class Usuario {
     public function getNombre(): string {
         return $this->nombre;
     }
+    
+    public function setId(int $contador = 0){
+        $this->id = ++$contador;
+    }
+    
 
     /**
      * Establece el nombre del usuario
@@ -87,18 +91,18 @@ class Usuario {
     }
 
     /**
-     * Recupera la clave del usuario
+     * Recupera la pwd del usuario
      * 
-     * @returns string Clave del usuario
+     * @returns string Pwd del usuario
      */
     public function getClave(): string {
         return $this->clave;
     }
 
     /**
-     * Establece la clave del usuario
+     * Establece la pwd del usuario
      * 
-     * @param string $clave Clave del usuario
+     * @param string $pwd pwd del usuario
      * 
      * @returns void
      */
@@ -125,5 +129,32 @@ class Usuario {
     public function setEmail(string $email) {
         $this->email = $email;
     }
-
+    
+    /**
+     * Recupera el rol del usuario
+     * 
+     * @returns string Rol del usuario
+     */
+    public function getRol(): string {
+        return $this->rol;
+    }
+    
+    /**
+     * Establece el rol del usuario
+     * 
+     * @param string $rol Rol del usuario
+     * 
+     * @returns void
+     */
+    public function setRol(string $rol) {
+        $this->rol = $rol;
+    }
+    
+    public function esAdministrador(){
+        return $this->rol === 'administrador'; //NO FUNCIONA.// VER
+       // return $this->nombre === 'admin';
+    }
+    
+    
+  
 }

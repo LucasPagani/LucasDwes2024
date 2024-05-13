@@ -59,21 +59,21 @@ class UsuarioDAO {
      * 
      * @returns Usuario que corresponde a ese nombre y clave o null en caso contrario
      */
-    public function recuperaPorCredencial(string $nombre, string $pwd): ?Usuario {
+    public function recuperaPorCredencial(string $nombre, string $clave): ?Usuario {
         $this->bd->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
         $sql = 'select * from usuarios where nombre=:nombre and clave=:pwd';
         $sth = $this->bd->prepare($sql);
-        $sth->execute([":nombre" => $nombre, ":pwd" => $pwd]);
+        $sth->execute([":nombre" => $nombre, ":pwd" => $clave]);
         $sth->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Usuario::class);
         $usuario = ($sth->fetch()) ?: null;
         return $usuario;
     }
 
-    public function recuperaPorRol(string $nombre, string $pwd, string $rol): ?Usuario {
+    public function recuperaPorRol(string $nombre, string $clave, string $rol): ?Usuario {
         $this->bd->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
         $sql = 'select * from usuarios where nombre=:nombre and clave=:pwd and rol=:rol';
         $sth = $this->bd->prepare($sql);
-        $sth->execute([":nombre" => $nombre, ":pwd" => $pwd, ":rol" => $rol]);
+        $sth->execute([":nombre" => $nombre, ":pwd" => $clave, ":rol" => $rol]);
         $sth->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Usuario::class);
         $usuario = ($sth->fetch()) ?: null;
         return $usuario;
@@ -88,4 +88,13 @@ class UsuarioDAO {
         $stmt->closeCursor();
         return $usuarios;
     }
+    
+     public function asignarRolAdministrador($idUsuario) {                
+            $sql = "UPDATE usuarios SET rol = 'administrador' WHERE id = :id";
+            $stmt = $this->bd->prepare($sql);
+            $stmt->bindParam(':id', $idUsuario, PDO::PARAM_INT);
+            $result = $stmt->execute();
+            return ($result);
+    }
+
 }
