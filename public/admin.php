@@ -99,7 +99,7 @@ if (isset($_SESSION ['usuario'])) {
         echo $blade->run("formregistro");
         die;
     }
-    elseif (isset($_REQUEST['otorgarRolAdmin'])) {
+    elseif (isset($_REQUEST['otorgarRolAdmin'])){
       
       $idUsuario = $_REQUEST['id'];        
       $usuarioDAO ->asignarRolAdministrador($idUsuario);
@@ -109,6 +109,12 @@ if (isset($_SESSION ['usuario'])) {
 
       
     }
+    elseif(isset($_REQUEST['irFormaAdmin'])){
+         $usuarios= $usuarioDAO->obtenerTodos();
+      
+       echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
+    }
+    
 } else {
     if (isset($_REQUEST['botonloginAdmin'])) {
         /** Aqui voy a a indicar que redirija a la vista de login como administrador */

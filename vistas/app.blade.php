@@ -24,10 +24,10 @@
                         <li><a class="dropdown-item" href="index.php?botonperfil">Perfil</a></li>
                         <li><a class="dropdown-item" href="index.php?botonbaja">Baja</a></li>
                         @if (isset($_SESSION['usuario']) && $_SESSION['usuario']->getRol() == 'administrador')
-                        <li><a class="dropdown-item" href="perfilAdministrador.blade.php">Espacio Admin</a></li>
+                        <li><a class="dropdown-item" href="admin.php?irFormaAdmin">Espacio Admin</a></li>
                         @endif
                     </ul>
-
+                    
                 </div>
                 @show
             </div>
