@@ -83,38 +83,56 @@ $usuarioDAO = new UsuarioDAO($bd);
 
 if (isset($_SESSION ['usuario'])) {
     if (isset($_REQUEST['botonEliminarUsuario'])) {
-        
-        $idUsuario = $_REQUEST['id'];        
+
+        $idUsuario = $_REQUEST['id'];
         $usuarioDAO->elimina($idUsuario);
-        $usuarios= $usuarioDAO->obtenerTodos();
-        
+        $usuarios = $usuarioDAO->obtenerTodos();
+
         session_unset();
         session_destroy();
         setcookie(session_name(), '', 0, '/');
-        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios,'mensaje' => 'Baja realizada con éxito']);
+        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Baja realizada con éxito']);
         die;
     } 
     elseif (isset($_REQUEST['botonCrearUsuario'])) {
 
         echo $blade->run("formregistro");
         die;
-    }
-    elseif (isset($_REQUEST['otorgarRolAdmin'])){
-      
-      $idUsuario = $_REQUEST['id'];        
-      $usuarioDAO ->asignarRolAdministrador($idUsuario);
-      $usuarios= $usuarioDAO->obtenerTodos();
-      
-       echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Rol otorgado con Exito']);
+    } 
+    elseif (isset($_REQUEST['otorgarRolAdmin'])) {
 
-      
+        $idUsuario = $_REQUEST['id'];
+        $usuarioDAO->asignarRolAdministrador($idUsuario);
+        $usuarios = $usuarioDAO->obtenerTodos();
+
+        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Rol otorgado con Exito']);
+    } 
+    elseif (isset($_REQUEST['botonHashearContraseñas'])) {
+
+        
+        $usuarioDAO->hashearContraseñas();
+        $usuarios = $usuarioDAO->obtenerTodos();
+
+        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Contraseña Hasheada']);
+    } 
+    elseif (isset($_REQUEST['quitarHashContraseñas'])) {
+
+        
+        $usuarioDAO->quitarHashContraseñas();
+        $usuarios = $usuarioDAO->obtenerTodos();
+
+        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Hash Eliminado']);
+    } 
+    elseif (isset($_REQUEST['irFormaAdmin'])) {
+        $usuarios = $usuarioDAO->obtenerTodos();
+
+        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
+    } 
+    else {
+        $usuarios = $usuarioDAO->obtenerTodos();
+
+        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
     }
-    elseif(isset($_REQUEST['irFormaAdmin'])){
-         $usuarios= $usuarioDAO->obtenerTodos();
-      
-       echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
-    }
-    
 } else {
     if (isset($_REQUEST['botonloginAdmin'])) {
         /** Aqui voy a a indicar que redirija a la vista de login como administrador */
@@ -151,4 +169,9 @@ if (isset($_SESSION ['usuario'])) {
             die;
         }
     }
+    else {
+            // Invoco la vista del formulario de login con el flag de error activado
+            echo $blade->run("formloginAdmin");
+            die;
+        }
 }

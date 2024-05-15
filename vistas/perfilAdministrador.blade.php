@@ -23,10 +23,13 @@
     <h2 class="text-center my-4">Perfil Administrador</h2>
     <div class="row">
         <div class="col-12">
-            
-                <a class="btn btn-secondary m2" aria-current="page" href="admin.php?botonCrearUsuario">Crear Usuario</a>
-            
-                <table class="table">
+
+            <a class="btn btn-secondary m2" aria-current="page" href="admin.php?botonCrearUsuario">Crear Usuario</a>
+            <!-- Botón para hashear la contraseña -->
+            <a class="btn btn-primary m2" aria-current="page" href="admin.php?botonHashearContraseñas">Hashear Contraseña</a>            
+            <!-- Botón para quitar hashear la contraseña -->
+            <a class="btn btn-danger m2" aria-current="page" href="admin.php?quitarHashContraseñas">Quitar Hash Contraseña</a>            
+            <table class="table">
                 <thead>
                     <tr>  
                         <th scope="col">ID</th>
@@ -44,10 +47,10 @@
                         <td>{{$item->getEmail()}}</td>
                         <td>{{$item->getRol()}}  </td>
                         <td>
-                            <form action="" method='POST' class="d-inline">
+                            <form action="admin.php" method='GET' class="d-inline">
                                 <input type="submit" class="btn btn-warning m2" value="Es Admiin" name="otorgarRolAdmin" >
-                                <input type="hidden" name="id" value="{{$item->getId()}}"> <!-- mandamos el código del producto a borrar -->
-                                <input type="submit" onclick="return confirm('¿Borrar Producto?')"  href="admin.php?botonEliminarUsuario"class="btn btn-danger" value="Borrar" name="botonEliminarUsuario">
+                                <input type="hidden" name="id" value="{{$item->getId()}}">
+                                <input type="submit" onclick="return confirm('¿Borrar Producto?')" class="btn btn-danger" value="Borrar" name="botonEliminarUsuario">
                                
                             </form>
                         </td>

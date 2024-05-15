@@ -31,16 +31,20 @@ class UsuarioDAO {
      * @returns bool Resultado de la operación de inserción
      */
     public function crea(Usuario $usuario): bool {
+        // Hashear la contraseña antes de insertarla
+        $hashedPassword = password_hash($usuario->getClave(), PASSWORD_BCRYPT);
         $sql = "insert into usuarios (nombre, clave, email) values (:nombre, :clave, :email)";
         $sth = $this->bd->prepare($sql);
-        $result = $sth->execute([":nombre" => $usuario->getNombre(), ":clave" => $usuario->getClave(), ":email" => $usuario->getEmail()]);
+        $result = $sth->execute([":nombre" => $usuario->getNombre(), ":clave" => $hashedPassword, ":email" => $usuario->getEmail()]);
         return ($result);
     }
 
     public function modifica($usuario) {
+        // Hashear la contraseña antes de actualizarla
+        $hashedPassword = password_hash($usuario->getClave(), PASSWORD_BCRYPT);
         $sql = "update usuarios set nombre = :nombre, clave = :clave, email = :email where id = :id";
         $sth = $this->bd->prepare($sql);
-        $result = $sth->execute([":nombre" => $usuario->getNombre(), ":clave" => $usuario->getClave(), ":email" => $usuario->getEmail(), ":id" => $usuario->getId()]);
+        $result = $sth->execute([":nombre" => $usuario->getNombre(), ":clave" => $hashedPassword, ":email" => $usuario->getEmail(), ":id" => $usuario->getId()]);
         return ($result);
     }
 
@@ -59,41 +63,35 @@ class UsuarioDAO {
      * 
      * @returns Usuario que corresponde a ese nombre y clave o null en caso contrario
      */
-    public function recuperaPorCredencial(string $nombre, string $clave): ?Usuario {
+    public function recuperaPorCredencialHash(string $nombre, string $clave): ?Usuario {
         $this->bd->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
-        $sql = 'select * from usuarios where nombre=:nombre and clave=:pwd';
+        $sql = 'select * from usuarios where nombre=:nombre';
         $sth = $this->bd->prepare($sql);
-        $sth->execute([":nombre" => $nombre, ":pwd" => $clave]);
+        $sth->execute([":nombre" => $nombre]);
         $sth->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Usuario::class);
         $usuario = ($sth->fetch()) ?: null;
+
+        if ($usuario && password_verify($clave, $usuario->getClave())) {
+            return $usuario;
+        } else {
             return $usuario;
         }
+    }
 
     public function recuperaPorRol(string $nombre, string $clave, string $rol): ?Usuario {
         $this->bd->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
-        $sql = 'select * from usuarios where nombre=:nombre and clave=:pwd and rol=:rol';
+        $sql = 'select * from usuarios where nombre=:nombre and rol=:rol';
         $sth = $this->bd->prepare($sql);
-        $sth->execute([":nombre" => $nombre, ":pwd" => $clave, ":rol" => $rol]);
+        $sth->execute([":nombre" => $nombre, ":rol" => $rol]);
         $sth->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Usuario::class);
         $usuario = ($sth->fetch()) ?: null;
-        return $usuario;
-    }
-    public function recuperaPorCredencialHash(string $nombre, string $clave): ?Usuario {
-    $this->bd->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
-    $sql = 'select * from usuarios where nombre=:nombre';
-    $sth = $this->bd->prepare($sql);
-    $sth->execute([":nombre" => $nombre]);  
-    $sth->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Usuario::class);
-    $usuario = $sth->fetch() ?: null;
 
-    if ($usuario && password_verify($clave, $usuario->getClave())) {
-        return $usuario;
-    } else {
-        return null;
+        if ($usuario && password_verify($clave, $usuario->getClave())) {
+            return $usuario;
+        } else {
+            return null;
+        }
     }
-}
-    
-    
 
     public function obtenerTodos(): array {
         $sql = "select * from usuarios";
@@ -104,16 +102,8 @@ class UsuarioDAO {
         $stmt->closeCursor();
         return $usuarios;
     }
-    
-     public function asignarRolAdministrador($idUsuario) {                
-            $sql = "UPDATE usuarios SET rol = 'administrador' WHERE id = :id";
-            $stmt = $this->bd->prepare($sql);
-            $stmt->bindParam(':id', $idUsuario, PDO::PARAM_INT);
-            $result = $stmt->execute();
-            return ($result);
-}
 
- /**
+    /**
      * Hashear las contraseñas de todos los usuarios en la base de datos.
      */
     public function hashearContraseñas() {
@@ -129,19 +119,5 @@ class UsuarioDAO {
             $updateStmt->execute([":clave" => $hashedPassword, ":id" => $usuario['id']]);
         }
     }
-    
-public function quitarHashContraseñas() {
-    $sql = "SELECT id, clave FROM usuarios";
-    $sth = $this->bd->prepare($sql);
-    $sth->execute();
-    $usuarios = $sth->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach ($usuarios as $usuario) {
-        $sqlUpdate = "UPDATE usuarios SET clave = :clave WHERE id = :id";
-        $sthUpdate = $this->bd->prepare($sqlUpdate);
-        // Establecer la contraseña en texto plano
-        $sthUpdate->execute([':clave' => $usuario['clave'], ':id' => $usuario['id']]);
-    }
 }
 
-}
