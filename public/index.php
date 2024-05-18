@@ -147,7 +147,8 @@ else {
         // Lee los valores del formulario
         $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
         $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
-        $usuario = $usuarioDAO->recuperaPorCredencialHash($nombre, $clave);
+         // $usuario = $usuarioDAO->recuperaPorCredencialHash($nombre, $clave); para logearse con la contraseña hasheada(NO FUNCIONA)
+        $usuario = $usuarioDAO->recuperaPorCredencial($nombre, $clave);
         // Si los credenciales son correctos
         if ($usuario) {
             $_SESSION['usuario'] = $usuario;

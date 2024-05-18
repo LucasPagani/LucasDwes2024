@@ -74,7 +74,7 @@ class UsuarioDAO {
         if ($usuario && password_verify($clave, $usuario->getClave())) {
             return $usuario;
         } else {
-            return $usuario;
+            return null;
         }
     }
 

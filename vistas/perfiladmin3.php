@@ -22,7 +22,8 @@
     @endif
     <h2 class="text-center my-4">Perfil Administrador</h2>
     <div class="row">
-        <div class="">
+        <div class="12">
+
             <a class="btn btn-secondary m2" aria-current="page" href="admin.php?botonCrearUsuario">Crear Usuario</a>
             <!-- Botón para hashear la contraseña -->
             <a class="btn btn-primary m2" aria-current="page" href="admin.php?botonHashearContraseñas">Hashear Contraseña</a>            
@@ -33,13 +34,8 @@
                     <tr>  
                         <th scope="col">ID</th>
                         <th scope="col">Nombre</th>                        
-                        <th scope="col">Email</th>
+                        <th scope="col">email</th>
                         <th scope="col">Rol</th>
-                        <!-- Añadir columnas solo cuando se soliciten los datos de las partidas -->
-                        @if (isset($partidasGanadas) && $partidasPerdidas)
-                            <th scope="col">Partidas Ganadas</th>
-                            <th scope="col">Partidas Perdidas</th>
-                        @endif
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -49,22 +45,39 @@
                         <td>{{$item->getId()}}</td>
                         <td>{{$item->getNombre()}}</td>                        
                         <td>{{$item->getEmail()}}</td>
-                        <td>{{$item->getRol()}}</td>
-                        <!-- Añadir datos de las partidas solo si se solicitan -->
-                        @if (isset($partidasGanadas) && $partidasPerdidas)
-                            <td>{{ $partidasGanadas }}</td>
-                            <td>{{ $partidasPerdidas }}</td>
-                        @endif
-                        <td>
-                            <form action="admin.php" method='GET' class="d-inline">
-                                <input type="submit" class="btn btn-warning m2" value="Es Admin" name="otorgarRolAdmin" >
-                                <input type="hidden" name="id" value="{{$item->getId()}}">
-                                <input type="submit" onclick="return confirm('¿Borrar Producto?')" class="btn btn-danger" value="Borrar" name="botonEliminarUsuario">
-                                <input type="submit" class="btn btn-warning m2" value="Datos Partidas" name="datosPartidas" >
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
+                        <td>{{$item->getRol()}}  </td>
+                        @php $i=1;
+                        @endphp
+                        @forelse($partidasGanadas as $palabraOculta=> $numErrores)
+
+                        <th >{{ $i++ }}</th>
+                        <td>{{ $palabraOculta }}</td>
+                        <td>{{ $numErrores }}</td>
+
+                        @empty
+                    <tr><td>No hay palabras</td></tr>
+                    @endforelse
+                    @php $i=1;
+                    @endphp
+                    @forelse($partidasPerdidas as $partidaPerdida)
+
+                <th >{{ $i++ }}</th>
+                <td>{{ $partidaPerdida }}</td>
+
+                @empty
+                <tr><td>No hay palabras</td></tr>
+                @endforelse
+                <td></td>
+                <td>
+                    <form action="admin.php" method='GET' class="d-inline">
+                        <input type="submit" class="btn btn-warning m2" value="Es Admiin" name="otorgarRolAdmin" >
+                        <input type="hidden" name="id" value="{{$item->getId()}}">
+                        <input type="submit" onclick="return confirm('¿Borrar Producto?')" class="btn btn-danger" value="Borrar" name="botonEliminarUsuario">
+                        <input type="submit" class="btn btn-warning m2" value="Datos Partidas" name="datosPartidas" >
+                    </form>
+                </td>
+                </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>

@@ -93,85 +93,111 @@ if (isset($_SESSION ['usuario'])) {
         setcookie(session_name(), '', 0, '/');
         echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Baja realizada con éxito']);
         die;
-    } 
-    elseif (isset($_REQUEST['botonCrearUsuario'])) {
+    } elseif (isset($_REQUEST['botonCrearUsuario'])) {
 
         echo $blade->run("formregistro");
         die;
-    } 
-    elseif (isset($_REQUEST['otorgarRolAdmin'])) {
+    } elseif (isset($_REQUEST['otorgarRolAdmin'])) {
 
         $idUsuario = $_REQUEST['id'];
         $usuarioDAO->asignarRolAdministrador($idUsuario);
         $usuarios = $usuarioDAO->obtenerTodos();
 
         echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Rol otorgado con Exito']);
-    } 
-    elseif (isset($_REQUEST['botonHashearContraseñas'])) {
+    } elseif (isset($_REQUEST['datosPartidas'])) {
+    $partidasGanadas = [];
+    $partidasPerdidas = [];
+    $idUsuario = $_REQUEST['id'];
 
-        
-        $usuarioDAO->hashearContraseñas();
-        $usuarios = $usuarioDAO->obtenerTodos();
+    // Verificar si hay partidas para este usuario en la sesión
+    if (isset($_SESSION['partida'][$idUsuario])) {
+        // Si hay partidas para este usuario, obtenerlas
+        $partidasUsuario = $_SESSION['partida'][$idUsuario];
 
-        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Contraseña Hasheada']);
-    } 
-    elseif (isset($_REQUEST['quitarHashContraseñas'])) {
-
-        
-        $usuarioDAO->quitarHashContraseñas();
-        $usuarios = $usuarioDAO->obtenerTodos();
-
-        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Hash Eliminado']);
-    } 
-    elseif (isset($_REQUEST['irFormaAdmin'])) {
-        $usuarios = $usuarioDAO->obtenerTodos();
-
-        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
-    } 
-    else {
-        $usuarios = $usuarioDAO->obtenerTodos();
-
-        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
-    }
-} else {
-    if (isset($_REQUEST['botonloginAdmin'])) {
-        /** Aqui voy a a indicar que redirija a la vista de login como administrador */
-        echo $blade->run("formLoginAdmin");
-        die;
-    } 
-    elseif (isset($_REQUEST['botonprologinAdmin'])) {
-        /*         * ya en la vista de login administrador tiene que tener los mismos campos que login pero con una
-         * adicional en el que indique el rol "administrador" el cual a la hora de validar tiene que 
-         * coincidir el id del usuario con el rol administrador
-         * -luego me redirige a la vista personalizada del administrador donde puede visualizar todos
-         * usuarios y realizar un crud  */
-        // Lee los valores del formulario
-        $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
-        $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
-
-        $usuario = $usuarioDAO->recuperaPorCredencial($nombre, $clave);
-        $usuarios = $usuarioDAO->obtenerTodos();
-        // Si los credenciales son correctos
-        if ($usuario) {
-            $usuarioAdmin = $usuario->esAdministrador();
-
-            if ($usuarioAdmin) {
-                $_SESSION['usuario'] = $usuario;
-                // Redirijo al administrador al script privado 
-                echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Bienvenido Administrador']);
-                die;
+        // Recorrer las partidas del usuario para clasificarlas como ganadas o perdidas
+        foreach ($partidasUsuario as $partida) {
+            if ($partida->esPalabraDescubierta()) {
+                $partidasGanadas[$partida->getPalabraSecreta()] = $partida->getNumErrores();
+            } else {
+                $partidasPerdidas[] = $partida->getPalabraSecreta();
             }
         }
-        // Si los credenciales son incorrectos
-        else {
-            // Invoco la vista del formulario de login con el flag de error activado
-            echo $blade->run("formloginAdmin", ['error' => true]);
-            die;
-        }
+
+        // Ordenar las partidas ganadas alfabéticamente
+        ksort($partidasGanadas);
+
+        // Ordenar las partidas perdidas alfabéticamente
+        sort($partidasPerdidas);
+
+        // Renderizar la vista con los datos de las partidas
+        echo $blade->run("perfilAdministrador", compact('partidasGanadas', 'partidasPerdidas', 'usuario'));
+        die;
     }
-    else {
+}
+ elseif (isset($_REQUEST['botonHashearContraseñas'])) {
+
+
+            $usuarioDAO->hashearContraseñas();
+            $usuarios = $usuarioDAO->obtenerTodos();
+
+            echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Contraseña Hasheada']);
+        } elseif (isset($_REQUEST['quitarHashContraseñas'])) {
+
+
+            $usuarioDAO->quitarHashContraseñas();
+            $usuarios = $usuarioDAO->obtenerTodos();
+
+            echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Hash Eliminado']);
+        } elseif (isset($_REQUEST['irFormaAdmin'])) {
+            $usuarios = $usuarioDAO->obtenerTodos();
+
+            echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
+        } else {
+            $usuarios = $usuarioDAO->obtenerTodos();
+
+            echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
+        }
+    } else {
+        if (isset($_REQUEST['botonloginAdmin'])) {
+            /** Aqui voy a a indicar que redirija a la vista de login como administrador */
+            echo $blade->run("formLoginAdmin");
+            die;
+        } elseif (isset($_REQUEST['botonprologinAdmin'])) {
+            /*             * ya en la vista de login administrador tiene que tener los mismos campos que login pero con una
+             * adicional en el que indique el rol "administrador" el cual a la hora de validar tiene que 
+             * coincidir el id del usuario con el rol administrador
+             * -luego me redirige a la vista personalizada del administrador donde puede visualizar todos
+             * usuarios y realizar un crud  */
+            // Lee los valores del formulario
+            $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
+            $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
+
+            // $usuario = $usuarioDAO->recuperaPorCredencialHash($nombre, $clave); para logearse con la contraseña hasheada(NO FUNCIONA)
+            $usuario = $usuarioDAO->recuperaPorCredencial($nombre, $clave);
+            $usuarios = $usuarioDAO->obtenerTodos();
+            // Si los credenciales son correctos
+            if ($usuario) {
+                $usuarioAdmin = $usuario->esAdministrador();
+
+                if ($usuarioAdmin) {
+                    $_SESSION['usuario'] = $usuario;
+                    // Redirijo al administrador al script privado 
+                    echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Bienvenido Administrador']);
+                    die;
+                } else {
+                    echo $blade->run("formloginAdmin", ['mensaje' => 'El Usuario NO es Administrador']);
+                }
+            }
+            // Si los credenciales son incorrectos
+            else {
+                // Invoco la vista del formulario de login con el flag de error activado
+                echo $blade->run("formloginAdmin", ['error' => true]);
+                die;
+            }
+        } else {
             // Invoco la vista del formulario de login con el flag de error activado
             echo $blade->run("formloginAdmin");
             die;
         }
-}
+    }
+    

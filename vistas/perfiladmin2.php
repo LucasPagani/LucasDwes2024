@@ -36,7 +36,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Rol</th>
                         <!-- Añadir columnas solo cuando se soliciten los datos de las partidas -->
-                        @if (isset($partidasGanadas) && $partidasPerdidas)
+                        @if (isset($mostrarDatosPartidas) && $mostrarDatosPartidas)
                             <th scope="col">Partidas Ganadas</th>
                             <th scope="col">Partidas Perdidas</th>
                         @endif
@@ -51,7 +51,7 @@
                         <td>{{$item->getEmail()}}</td>
                         <td>{{$item->getRol()}}</td>
                         <!-- Añadir datos de las partidas solo si se solicitan -->
-                        @if (isset($partidasGanadas) && $partidasPerdidas)
+                        @if (isset($mostrarDatosPartidas) && $mostrarDatosPartidas)
                             <td>{{ $partidasGanadas }}</td>
                             <td>{{ $partidasPerdidas }}</td>
                         @endif
