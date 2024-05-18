@@ -130,6 +130,29 @@ if (isset($_SESSION['usuario'])) {
         echo $blade->run("formlogin", ['mensaje' => 'Baja realizada con éxito']);
         die;
     } 
+    elseif (isset($_REQUEST['botonprocregistro'])) {
+        $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
+        $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
+        $email = trim(filter_input(INPUT_POST, 'email', FILTER_UNSAFE_RAW));
+        $errorNombre = empty($nombre) || !esNombreValido($nombre);
+        $errorPassword = empty($clave) || !esPasswordValido($clave);
+        $errorEmail = !esEmailValido($email);
+        $error = $errorNombre || $errorPassword || $errorEmail;
+        if ($error) {
+            echo $blade->run("formregistro", compact('nombre', 'clave', 'email', 'errorNombre', 'errorPassword', 'errorEmail'));
+            die;
+        } else {
+            $usuario = new Usuario($nombre, $clave, $email);
+            try {
+                $usuarioDAO->crea($usuario);
+            } catch (PDOException $e) {
+                echo $blade->run("formregistro", ['errorBD' => true]);
+                die();
+            }
+            echo $blade->run("formlogin", ['mensaje' => 'Usuario creado con éxito']);
+            die();
+        }
+    } 
     else {
         if (isset($_SESSION['partida'])) { // Si hay una partida en curso
             header("Location:juego.php");
@@ -147,7 +170,7 @@ else {
         // Lee los valores del formulario
         $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
         $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
-         // $usuario = $usuarioDAO->recuperaPorCredencialHash($nombre, $clave); para logearse con la contraseña hasheada(NO FUNCIONA)
+        // $usuario = $usuarioDAO->recuperaPorCredencialHash($nombre, $clave); para logearse con la contraseña hasheada(NO FUNCIONA)
         $usuario = $usuarioDAO->recuperaPorCredencial($nombre, $clave);
         // Si los credenciales son correctos
         if ($usuario) {
@@ -163,13 +186,11 @@ else {
             die;
         }
         // Si se solicita el formulario de registro
-    } 
-    elseif (isset($_REQUEST['botonregistro'])) {
+    } elseif (isset($_REQUEST['botonregistro'])) {
         echo $blade->run("formregistro");
         die;
         // Si se solicita que se procese una petición de registro
-    } 
-    elseif (isset($_REQUEST['botonprocregistro'])) {
+    } elseif (isset($_REQUEST['botonprocregistro'])) {
         $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
         $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
         $email = trim(filter_input(INPUT_POST, 'email', FILTER_UNSAFE_RAW));
@@ -180,21 +201,23 @@ else {
         if ($error) {
             echo $blade->run("formregistro", compact('nombre', 'clave', 'email', 'errorNombre', 'errorPassword', 'errorEmail'));
             die;
-        } 
-        else {
+        } else {
             $usuario = new Usuario($nombre, $clave, $email);
             try {
                 $usuarioDAO->crea($usuario);
             } catch (PDOException $e) {
                 echo $blade->run("formregistro", ['errorBD' => true]);
                 die();
+            }if (isset($_SESSION['usuario'])) {
+                echo $blade->run("perfilAdministrador", ['mensaje' => 'Usuario creado con éxito']);
+                die();
+            } else {
+
+                echo $blade->run("formlogin", ['mensaje' => 'Usuario creado con éxito']);
+                die();
             }
-            echo $blade->run("formlogin" , ['mensaje' => 'Usuario creado con éxito']);
-            die();
         }
-    } 
-    
-    else {
+    } else {
         // Invoco la vista del formulario de login
         echo $blade->run("formlogin");
         die;

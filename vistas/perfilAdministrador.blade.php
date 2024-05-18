@@ -7,7 +7,7 @@
 {{-- Sección para el autoregistro de usuarios --}}
 @section ('navbar')
 <li class='nav-item'>
-    <a class='nav-link' aria-current='page' href='index.php?botonprocloginadmin'>Salir</a>
+    <a class='nav-link' aria-current='page' href='juego.php?botonnuevapartida'>Juego</a>
 </li>
 @endsection
 

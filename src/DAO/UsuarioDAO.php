@@ -31,9 +31,9 @@ class UsuarioDAO {
      * @returns bool Resultado de la operación de inserción
      */
     public function crea(Usuario $usuario): bool {
-        $sql = "insert into usuarios (nombre, clave, email) values (:nombre, :clave, :email), :rol";
+        $sql = "insert into usuarios (nombre, clave, email) values (:nombre, :clave, :email)";
         $sth = $this->bd->prepare($sql);
-        $result = $sth->execute([":nombre" => $usuario->getNombre(), ":clave" => $usuario->getClave(), ":email" => $usuario->getEmail(), ":rol"=>$usuario->getRol()]);
+        $result = $sth->execute([":nombre" => $usuario->getNombre(), ":clave" => $usuario->getClave(), ":email" => $usuario->getEmail()]);
         return ($result);
     }
 

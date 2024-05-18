@@ -1,32 +1,5 @@
 <?php
 
-/**
- *  --- Lógica del script --- 
- * 
- * Establece conexión a la base de datos PDO
- * Si el usuario ya está validado
- *   Si se solicita cerrar la sesión
- *     Destruyo la sesión
- *     Invoco la vista del formulario de login
- *    Sino redirección a juego para jugar una partida
- *  Sino 
- *   Si se pide procesar los datos del formulario
- *       Lee los valores del formulario
- *       Si los credenciales son correctos
- *       Redirijo al cliente al script de juego con una nueva partida
- *        Sino Invoco la vista del formulario de login con el flag de error
- *    Sino si se solicita el formulario de registro
- *     Invoco la vista del formulario de registro
- *    Sino si se solicita procesar el formulario de registro
- *     Leo los datos
- *     Establezco flags de error
- *     Si hay errores
- *        Invoco la vista de formulario de registro  con información sobre los errores
- *      Sino persisto el usuario en la base de datos
- *          Invoco la vista de formulario de login 
- *   Sino (En cualquier otro caso)
- *      Invoco la vista del formulario de login
- */
 require "../vendor/autoload.php";
 
 use eftec\bladeone\BladeOne;
@@ -93,28 +66,29 @@ if (isset($_SESSION ['usuario'])) {
         setcookie(session_name(), '', 0, '/');
         echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Baja realizada con éxito']);
         die;
-    } elseif (isset($_REQUEST['botonCrearUsuario'])) {
+    } 
+    elseif (isset($_REQUEST['botonCrearUsuario'])) {
 
         echo $blade->run("formregistro");
         die;
-    } elseif (isset($_REQUEST['otorgarRolAdmin'])) {
+    } 
+    elseif (isset($_REQUEST['otorgarRolAdmin'])) {
 
         $idUsuario = $_REQUEST['id'];
         $usuarioDAO->asignarRolAdministrador($idUsuario);
         $usuarios = $usuarioDAO->obtenerTodos();
 
         echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Rol otorgado con Exito']);
-    } elseif (isset($_REQUEST['datosPartidas'])) {
-    $partidasGanadas = [];
-    $partidasPerdidas = [];
-    $idUsuario = $_REQUEST['id'];
-
-    // Verificar si hay partidas para este usuario en la sesión
-    if (isset($_SESSION['partida'][$idUsuario])) {
-        // Si hay partidas para este usuario, obtenerlas
-        $partidasUsuario = $_SESSION['partida'][$idUsuario];
-
-        // Recorrer las partidas del usuario para clasificarlas como ganadas o perdidas
+    } 
+    elseif (isset($_REQUEST['datosPartidas'])) {
+        $idUsuario = $_REQUEST['id']; // Obtener el ID del usuario desde el formulario
+        $usuarios = $usuarioDAO->obtenerTodos();
+    if (isset($_SESSION['partidas'][$idUsuario])) {
+        $partidasUsuario = $_SESSION['partidas'][$idUsuario];
+        $partidasGanadas = [];
+        $partidasPerdidas = [];
+        
+        
         foreach ($partidasUsuario as $partida) {
             if ($partida->esPalabraDescubierta()) {
                 $partidasGanadas[$partida->getPalabraSecreta()] = $partida->getNumErrores();
@@ -123,46 +97,57 @@ if (isset($_SESSION ['usuario'])) {
             }
         }
 
-        // Ordenar las partidas ganadas alfabéticamente
         ksort($partidasGanadas);
-
-        // Ordenar las partidas perdidas alfabéticamente
         sort($partidasPerdidas);
 
-        // Renderizar la vista con los datos de las partidas
-        echo $blade->run("perfilAdministrador", compact('partidasGanadas', 'partidasPerdidas', 'usuario'));
-        die;
+        echo $blade->run("perfilAdministrador", compact('partidasGanadas', 'partidasPerdidas', 'idUsuario','usuarios'));
+    } 
+    else {
+        // Manejar el caso en que no hay partidas para este usuario
+        echo $blade->run("perfilAdministrador", [
+            'usuarios' => $usuarios,
+            'partidasGanadas' => [],
+            'partidasPerdidas' => [],
+            'idUsuario' => $idUsuario,
+            
+        ]);
     }
+    die;
 }
- elseif (isset($_REQUEST['botonHashearContraseñas'])) {
+    elseif (isset($_REQUEST['botonHashearContraseñas'])) {
 
 
             $usuarioDAO->hashearContraseñas();
             $usuarios = $usuarioDAO->obtenerTodos();
 
             echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Contraseña Hasheada']);
-        } elseif (isset($_REQUEST['quitarHashContraseñas'])) {
+        } 
+    elseif (isset($_REQUEST['quitarHashContraseñas'])) {
 
 
             $usuarioDAO->quitarHashContraseñas();
             $usuarios = $usuarioDAO->obtenerTodos();
 
             echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Hash Eliminado']);
-        } elseif (isset($_REQUEST['irFormaAdmin'])) {
+        } 
+    elseif (isset($_REQUEST['irFormaAdmin'])) {
             $usuarios = $usuarioDAO->obtenerTodos();
 
             echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
-        } else {
+        } 
+    else {
             $usuarios = $usuarioDAO->obtenerTodos();
 
             echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
         }
-    } else {
+    } 
+    else {
         if (isset($_REQUEST['botonloginAdmin'])) {
             /** Aqui voy a a indicar que redirija a la vista de login como administrador */
             echo $blade->run("formLoginAdmin");
             die;
-        } elseif (isset($_REQUEST['botonprologinAdmin'])) {
+        } 
+        elseif (isset($_REQUEST['botonprologinAdmin'])) {
             /*             * ya en la vista de login administrador tiene que tener los mismos campos que login pero con una
              * adicional en el que indique el rol "administrador" el cual a la hora de validar tiene que 
              * coincidir el id del usuario con el rol administrador
@@ -194,7 +179,8 @@ if (isset($_SESSION ['usuario'])) {
                 echo $blade->run("formloginAdmin", ['error' => true]);
                 die;
             }
-        } else {
+        } 
+        else {
             // Invoco la vista del formulario de login con el flag de error activado
             echo $blade->run("formloginAdmin");
             die;
