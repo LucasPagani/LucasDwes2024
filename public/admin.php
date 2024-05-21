@@ -117,15 +117,15 @@ if (isset($_SESSION ['usuario'])) {
     elseif (isset($_REQUEST['botonHashearContraseñas'])) {
 
 
-            $usuarioDAO->hashearContraseñas();
+            $usuarioDAO->hashearContraseñasSHA();
             $usuarios = $usuarioDAO->obtenerTodos();
 
             echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Contraseña Hasheada']);
         } 
     elseif (isset($_REQUEST['quitarHashContraseñas'])) {
 
-
-            $usuarioDAO->quitarHashContraseñas();
+            // $usuarioDAO->quitarHashContraseñas(); hay que seleccionar el id de cada uno y darle contraseñas
+            $usuarioDAO->quitarHashContraseñasAuto('123456'); //pasando un string para que todos tengan la misma contraseña
             $usuarios = $usuarioDAO->obtenerTodos();
 
             echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Hash Eliminado']);
@@ -157,7 +157,7 @@ if (isset($_SESSION ['usuario'])) {
             $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
             $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
 
-            // $usuario = $usuarioDAO->recuperaPorCredencialHash($nombre, $clave); para logearse con la contraseña hasheada(NO FUNCIONA)
+           // $usuario = $usuarioDAO->recuperaPorCredencialHashed($nombre, $clave); //para logearse con la contraseña hasheada(NO FUNCIONA)
             $usuario = $usuarioDAO->recuperaPorCredencial($nombre, $clave);
             $usuarios = $usuarioDAO->obtenerTodos();
             // Si los credenciales son correctos

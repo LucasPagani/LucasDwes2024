@@ -39,6 +39,7 @@ $views = __DIR__ . '/../vistas';
 $cache = __DIR__ . '/../cache';
 $blade = new BladeOne($views, $cache, BladeOne::MODE_DEBUG);
 
+//FUNCIONES PARA PALABRA PERSONALIZADA
 function esLongitudMinimaError ($lon) {
     return !(filter_var($lon, FILTER_VALIDATE_INT, ['options' => ['min_range' => 3, 'max_range' => 14]]));
 }

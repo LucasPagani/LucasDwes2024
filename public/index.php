@@ -1,32 +1,5 @@
 <?php
 
-/**
- *  --- Lógica del script --- 
- * 
- * Establece conexión a la base de datos PDO
- * Si el usuario ya está validado
- *   Si se solicita cerrar la sesión
- *     Destruyo la sesión
- *     Invoco la vista del formulario de login
- *    Sino redirección a juego para jugar una partida
- *  Sino 
- *   Si se pide procesar los datos del formulario
- *       Lee los valores del formulario
- *       Si los credenciales son correctos
- *       Redirijo al cliente al script de juego con una nueva partida
- *        Sino Invoco la vista del formulario de login con el flag de error
- *    Sino si se solicita el formulario de registro
- *     Invoco la vista del formulario de registro
- *    Sino si se solicita procesar el formulario de registro
- *     Leo los datos
- *     Establezco flags de error
- *     Si hay errores
- *        Invoco la vista de formulario de registro  con información sobre los errores
- *      Sino persisto el usuario en la base de datos
- *          Invoco la vista de formulario de login 
- *   Sino (En cualquier otro caso)
- *      Invoco la vista del formulario de login
- */
 require "../vendor/autoload.php";
 
 use eftec\bladeone\BladeOne;
@@ -170,7 +143,7 @@ else {
         // Lee los valores del formulario
         $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
         $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
-        // $usuario = $usuarioDAO->recuperaPorCredencialHash($nombre, $clave); para logearse con la contraseña hasheada(NO FUNCIONA)
+        // $usuario = $usuarioDAO->recuperaPorCredencialHashed($nombre, $clave); para logearse con la contraseña hasheada(NO FUNCIONA)
         $usuario = $usuarioDAO->recuperaPorCredencial($nombre, $clave);
         // Si los credenciales son correctos
         if ($usuario) {
