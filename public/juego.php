@@ -63,6 +63,9 @@ if (isset($_SESSION['usuario'])) {
         die;
     } 
     elseif (isset($_REQUEST['botonnuevapartida'])) { // Se arranca una nueva partida
+        
+       $mensaje = isset($_GET['mensaje']) ? htmlspecialchars($_GET['mensaje']) : null;// si me redirigen a este script con algun mensaje
+        
         //$wsdl = $_ENV['WSDL_ALMACEN_PALABRAS'];
         //$almacenPalabras = new AlmacenPalabrasSoap($wsdl);       // sustituimos la ruta para buscar las palabras
         $rutaFichero = $_ENV['RUTA_ALMACEN_PALABRAS'];
@@ -71,10 +74,9 @@ if (isset($_SESSION['usuario'])) {
         $partida = new Hangman($almacenPalabras, MAX_NUM_ERRORES);
         $_SESSION['partida'] = $partida;
 // Invoco la vista del juego para empezar a jugar
-        echo $blade->run("juego", compact('usuario', 'partida'));
+        echo $blade->run("juego", compact('usuario', 'partida', 'mensaje'));
         die;
-    } 
-    elseif (isset($_REQUEST['botonpuntuacionpartidas'])) {// Se arranca una nueva partida
+    } elseif (isset($_REQUEST['botonpuntuacionpartidas'])) {// Se arranca una nueva partida
         $partidas = $_SESSION['partidas'] ?? [];
         $panelPuntuacion = [];
         foreach ($partidas as $partida) {
@@ -82,8 +84,7 @@ if (isset($_SESSION['usuario'])) {
         }
         echo $blade->run("puntuacionpartidas", compact('panelPuntuacion', 'usuario'));
         die;
-    } 
-    elseif (isset($_REQUEST['botonresumenpartidas'])) {// Se arranca una nueva partida
+    } elseif (isset($_REQUEST['botonresumenpartidas'])) {// Se arranca una nueva partida
         $partidas = $_SESSION['partidas'] ?? [];
         $partidasGanadas = [];
         $partidasPerdidas = [];
@@ -99,12 +100,10 @@ if (isset($_SESSION['usuario'])) {
 
         echo $blade->run("resumenpartidas", compact('partidasGanadas', 'partidasPerdidas', 'usuario'));
         die;
-    } 
-    elseif (isset($_REQUEST['botonformpartidapersonalizada'])) {// Se arranca una nueva partida
+    } elseif (isset($_REQUEST['botonformpartidapersonalizada'])) {// Se arranca una nueva partida
         echo $blade->run("formpartidapersonalizada", compact('usuario'));
         die;
-    } 
-    elseif (isset($_REQUEST['botonpartidapersonalizada'])) {// Se arranca una nueva partida
+    } elseif (isset($_REQUEST['botonpartidapersonalizada'])) {// Se arranca una nueva partida
         $minLongitud = filter_input(INPUT_POST, 'minlongitud');
         $minLongitudError = !empty($minLongitud) && esLongitudMinimaError($minLongitud);
         $maxLongitud = filter_input(INPUT_POST, 'maxlongitud');
@@ -127,9 +126,7 @@ if (isset($_SESSION['usuario'])) {
             echo $blade->run("juego", compact('usuario', 'partida'));
             die;
         }
-    } 
-   
- else { //En cualquier otro caso
+    } else { //En cualquier otro caso
         $partida = $_SESSION['partida'];
         echo $blade->run("juego", compact('usuario', 'partida'));
         die;

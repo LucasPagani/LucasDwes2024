@@ -144,7 +144,9 @@ if (isset($_SESSION['usuario'])) {
         $cantidadPerdidas = count($partidasPerdidas);
 
         $usuarioDAO->guardaPartidas($idUsuario, $cantidadGanadas,$cantidadPerdidas);
-        header("Location: juego.php?mensaje=Guardado con éxito");
+       
+         header("Location: juego.php?botonnuevapartida&mensaje=Guardado en la Base de datos con exito");
+        
     } 
     else {
         if (isset($_SESSION['partida'])) { // Si hay una partida en curso

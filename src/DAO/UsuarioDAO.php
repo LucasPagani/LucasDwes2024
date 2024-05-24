@@ -153,7 +153,7 @@ class UsuarioDAO {
     }
 
     public function guardaPartidas(int $idUsuario, int $cantidadGanadas, int $cantidadPerdidas): bool {
-        $sql = "UPDATE usuarios SET partidas_ganadas = :partidasGanadas, partidas_perdidas = :partidasPerdidas WHERE id = :idUsuario";
+        $sql = "UPDATE usuarios SET partidasganadas = :partidasGanadas, partidasperdidas = :partidasPerdidas WHERE id = :idUsuario";
         $sth = $this->bd->prepare($sql);
         $result = $sth->execute([
             ":partidasGanadas" => $cantidadGanadas,

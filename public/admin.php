@@ -80,12 +80,12 @@ if (isset($_SESSION ['usuario'])) {
 
         echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Rol otorgado con Exito']);
     } 
-   elseif (isset($_REQUEST['datosPartidas'])) {
-    $idUsuario = $_REQUEST['id']; // Obtener el ID del usuario desde el formulario
+   /**elseif (isset($_REQUEST['datosPartidas'])) {
+    $idUsuario = $_REQUEST['id']; 
     $usuarios = $usuarioDAO->obtenerTodos();
     
     echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
-}
+}*/
 
     elseif (isset($_REQUEST['botonHashearContraseñas'])) {
 
