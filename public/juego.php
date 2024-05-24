@@ -1,31 +1,12 @@
 <?php
 
-/**
- *  --- Lógica del script --- 
- * 
- * Establece conexión a la base de datos PDO
- * Si el usuario ya está validado
- *   Si se pide jugar con una letra
- *     Leo la letra
- *     Si no hay error en la letra introducida
- *       Solicito a la partida que compruebe la letra
- *     Invoco la vista de juego con los datos obtenidos
- *   Sino si se solicita una pista
- *     Obtengo una pista para la partida
- *     Envío la pista en JSON al cliente
- *   Sino si se solicita una nueva partida
- *     Se crea una nueva partida
- *     Invoco la vista del juego para empezar a jugar
- *   Sino Invoco la vista de juego
- *  Sino (En cualquier otro caso)
- *      Invoco la vista del formulario de login
- */
 require "../vendor/autoload.php";
 
 use eftec\bladeone\BladeOne;
 use Dotenv\Dotenv;
 use App\Modelo\Hangman;
 use App\Almacen\AlmacenPalabrasFichero;
+
 //use App\Almacen\AlmacenPalabrasSoap;   //Para usar con el la opcion de servicio Soap
 
 session_start();
@@ -40,15 +21,15 @@ $cache = __DIR__ . '/../cache';
 $blade = new BladeOne($views, $cache, BladeOne::MODE_DEBUG);
 
 //FUNCIONES PARA PALABRA PERSONALIZADA
-function esLongitudMinimaError ($lon) {
+function esLongitudMinimaError($lon) {
     return !(filter_var($lon, FILTER_VALIDATE_INT, ['options' => ['min_range' => 3, 'max_range' => 14]]));
 }
 
-function esLongitudMaximaError ($lon) {
+function esLongitudMaximaError($lon) {
     return !(filter_var($lon, FILTER_VALIDATE_INT, ['options' => ['min_range' => 5, 'max_range' => 20]]));
 }
 
-function esContieneError ($letras) {
+function esContieneError($letras) {
     return !(filter_var($letras, FILTER_VALIDATE_REGEXP, ['options' => ['regexp' => '/^[a-zA-Z]{1,3}$/']]));
 }
 
@@ -82,12 +63,11 @@ if (isset($_SESSION['usuario'])) {
         die;
     } 
     elseif (isset($_REQUEST['botonnuevapartida'])) { // Se arranca una nueva partida
-       
         //$wsdl = $_ENV['WSDL_ALMACEN_PALABRAS'];
         //$almacenPalabras = new AlmacenPalabrasSoap($wsdl);       // sustituimos la ruta para buscar las palabras
         $rutaFichero = $_ENV['RUTA_ALMACEN_PALABRAS'];
         $almacenPalabras = new AlmacenPalabrasFichero($rutaFichero);
-        
+
         $partida = new Hangman($almacenPalabras, MAX_NUM_ERRORES);
         $_SESSION['partida'] = $partida;
 // Invoco la vista del juego para empezar a jugar
@@ -102,7 +82,7 @@ if (isset($_SESSION['usuario'])) {
         }
         echo $blade->run("puntuacionpartidas", compact('panelPuntuacion', 'usuario'));
         die;
-    }
+    } 
     elseif (isset($_REQUEST['botonresumenpartidas'])) {// Se arranca una nueva partida
         $partidas = $_SESSION['partidas'] ?? [];
         $partidasGanadas = [];
@@ -119,7 +99,7 @@ if (isset($_SESSION['usuario'])) {
 
         echo $blade->run("resumenpartidas", compact('partidasGanadas', 'partidasPerdidas', 'usuario'));
         die;
-    }
+    } 
     elseif (isset($_REQUEST['botonformpartidapersonalizada'])) {// Se arranca una nueva partida
         echo $blade->run("formpartidapersonalizada", compact('usuario'));
         die;
@@ -128,10 +108,9 @@ if (isset($_SESSION['usuario'])) {
         $minLongitud = filter_input(INPUT_POST, 'minlongitud');
         $minLongitudError = !empty($minLongitud) && esLongitudMinimaError($minLongitud);
         $maxLongitud = filter_input(INPUT_POST, 'maxlongitud');
-        $maxLongitudError = !empty($maxLongitud) && esLongitudMaximaError($maxLongitud);;
-        $maxminError = !empty($minLongitud) && !empty($maxLongitud) 
-                && !esLongitudMinimaError($minLongitud) && !esLongitudMaximaError($maxLongitud) 
-                && ($minLongitud > $maxLongitud);
+        $maxLongitudError = !empty($maxLongitud) && esLongitudMaximaError($maxLongitud);
+        ;
+        $maxminError = !empty($minLongitud) && !empty($maxLongitud) && !esLongitudMinimaError($minLongitud) && !esLongitudMaximaError($maxLongitud) && ($minLongitud > $maxLongitud);
         $contiene = trim(filter_input(INPUT_POST, 'contiene'));
         $contieneError = !empty($contiene) && esContieneError($contiene);
         $error = $minLongitudError || $maxLongitudError || $maxminError || $contieneError;
@@ -141,15 +120,16 @@ if (isset($_SESSION['usuario'])) {
         } else {
             $rutaFichero = $_ENV['RUTA_ALMACEN_PALABRAS'];
             $almacenPalabras = new AlmacenPalabrasFichero($rutaFichero);
-            $options = array_filter (compact('minLongitud', 'maxLongitud', 'contiene'), fn ($x) => !empty($x));
+            $options = array_filter(compact('minLongitud', 'maxLongitud', 'contiene'), fn($x) => !empty($x));
             $partida = new Hangman($almacenPalabras, MAX_NUM_ERRORES, $options);
             $_SESSION['partida'] = $partida;
 // Invoco la vista del juego para empezar a jugar
             echo $blade->run("juego", compact('usuario', 'partida'));
             die;
         }
-    }
-    else { //En cualquier otro caso
+    } 
+   
+ else { //En cualquier otro caso
         $partida = $_SESSION['partida'];
         echo $blade->run("juego", compact('usuario', 'partida'));
         die;

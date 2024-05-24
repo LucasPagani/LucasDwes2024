@@ -17,9 +17,7 @@
         @if (isset($mensaje)) 
         <div  class="alert alert-primary" role="alert">{{ $mensaje }}</div>
         @endif
-        @if (isset($error)) 
-        <div class="alert alert-danger" role="alert">Error Credenciales</div>
-        @endif
+        
         <h2 class="text-center">Login Administrador</h2>
         <div class="panel-body mt-3">
             <form class="form-horizontal" method="POST" action="admin.php" id='formlogin'>

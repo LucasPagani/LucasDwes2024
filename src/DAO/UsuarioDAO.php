@@ -23,7 +23,6 @@ class UsuarioDAO {
         $this->bd = $bd;
     }
 
-    
     public function crea(Usuario $usuario): bool {
         $sql = "insert into usuarios (nombre, clave, email) values (:nombre, :clave, :email)";
         $sth = $this->bd->prepare($sql);
@@ -55,7 +54,7 @@ class UsuarioDAO {
         return $usuario;
     }
 
-     public function recuperaPorCredencialHashed(string $nombre, string $clave): ?Usuario {
+    public function recuperaPorCredencialHashed(string $nombre, string $clave): ?Usuario {
         // Hashear la contraseña proporcionada usando SHA-256
         $pwdHashed = hash('sha256', $clave);
         // Seleccionar el usuario que coincida con el nombre y la contraseña hasheada
@@ -115,14 +114,14 @@ class UsuarioDAO {
             ]);
         }
     }
-    
+
     public function quitarHashContraseñas() {
         // Array de contraseñas originales, esto debería venir de una fuente segura
-        $contraseñasOriginales = [ // Tenemos que seleccionar uno a uno los id para otorgarles contraseñas
+        $contraseñasOriginales = [// Tenemos que seleccionar uno a uno los id para otorgarles contraseñas
             17 => '123456',
             20 => '123456',
             3 => '123456',
-            // Añade más contraseñas originales según sea necesario
+                // Añade más contraseñas originales según sea necesario
         ];
 
         foreach ($contraseñasOriginales as $id => $clave) {
@@ -152,5 +151,15 @@ class UsuarioDAO {
             ]);
         }
     }
-    
-       }
+
+    public function guardaPartidas(int $idUsuario, int $cantidadGanadas, int $cantidadPerdidas): bool {
+        $sql = "UPDATE usuarios SET partidas_ganadas = :partidasGanadas, partidas_perdidas = :partidasPerdidas WHERE id = :idUsuario";
+        $sth = $this->bd->prepare($sql);
+        $result = $sth->execute([
+            ":partidasGanadas" => $cantidadGanadas,
+            ":partidasPerdidas" => $cantidadPerdidas,
+            ":idUsuario" => $idUsuario
+        ]);
+        return $result;
+    }
+}

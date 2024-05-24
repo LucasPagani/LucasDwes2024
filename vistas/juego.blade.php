@@ -5,6 +5,9 @@
 {{-- Sección muestra vista de juego para que el usuario elija una letra --}}
 @section ('navbar')
 <li class="nav-item">
+    <a class="nav-link" aria-current="page" href="index.php?botonguardarbbdd">Guardar Partida</a>
+</li>
+<li class="nav-item">
     <a class="nav-link" aria-current="page" href="juego.php?botonresumenpartidas">Resumen Partidas</a>
 </li>
 <li class="nav-item">
@@ -17,6 +20,14 @@
 @section('content')
 @set($imgsHangman=['Hangman-0.png','Hangman-1.png','Hangman-2.png','Hangman-3.png','Hangman-4.png','Hangman-5.png'])
 <div class="container">
+    
+    @if (isset($mensaje)) 
+        <div  class="alert alert-primary" role="alert">{{ $mensaje }}</div>
+        @endif
+        @if (isset($error)) 
+        <div class="alert alert-danger" role="alert">Error Credenciales</div>
+        @endif
+    
     <div class="position-relative p-5">
         <div class="position-absolute top-50 start-50 translate-middle">
             <h1 id='mensaje_fin'>{{ $partida->esFin() ? ($partida->esPalabraDescubierta() ? "Enhorabuena!" : "Has perdido!") : ""}}</h1>

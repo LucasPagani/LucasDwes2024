@@ -125,6 +125,26 @@ if (isset($_SESSION['usuario'])) {
             echo $blade->run("formlogin", ['mensaje' => 'Usuario creado con éxito']);
             die();
         }
+    }
+    elseif (isset($_REQUEST['botonguardarbbdd'])) {
+        $partidas = $_SESSION['partidas'] ?? [];
+        $usuario = $_SESSION['usuario'];
+        $partidasGanadas = [];
+        $partidasPerdidas = [];
+        $idUsuario = $usuario->getId();
+        foreach ($partidas as $partida) {
+            if ($partida->esPalabraDescubierta()) {
+                $partidasGanadas[$partida->getPalabraSecreta()] = $partida->getNumErrores();
+            } else {
+                $partidasPerdidas[] = $partida->getPalabraSecreta();
+            }
+        }
+       
+        $cantidadGanadas = count($partidasGanadas);
+        $cantidadPerdidas = count($partidasPerdidas);
+
+        $usuarioDAO->guardaPartidas($idUsuario, $cantidadGanadas,$cantidadPerdidas);
+        header("Location: juego.php?mensaje=Guardado con éxito");
     } 
     else {
         if (isset($_SESSION['partida'])) { // Si hay una partida en curso
@@ -159,11 +179,13 @@ else {
             die;
         }
         // Si se solicita el formulario de registro
-    } elseif (isset($_REQUEST['botonregistro'])) {
+    } 
+    elseif (isset($_REQUEST['botonregistro'])) {
         echo $blade->run("formregistro");
         die;
         // Si se solicita que se procese una petición de registro
-    } elseif (isset($_REQUEST['botonprocregistro'])) {
+    } 
+    elseif (isset($_REQUEST['botonprocregistro'])) {
         $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
         $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
         $email = trim(filter_input(INPUT_POST, 'email', FILTER_UNSAFE_RAW));
@@ -190,7 +212,8 @@ else {
                 die();
             }
         }
-    } else {
+    } 
+    else {
         // Invoco la vista del formulario de login
         echo $blade->run("formlogin");
         die;

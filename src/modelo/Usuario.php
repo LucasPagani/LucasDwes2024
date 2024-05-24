@@ -6,7 +6,7 @@ namespace App\Modelo;
  * Clase que representa al usuario que está usando la aplicación
  */
 class Usuario {
-    
+
     /**
      * @var string $id identificador del usuario
      */
@@ -26,8 +26,13 @@ class Usuario {
      * @var string $email Email del usuario
      */
     private ?string $email;
+   
     
-      private ?string $rol;
+    private ?string $rol;
+   
+    private ?int $partidasganadas ;
+    
+    private ?int $partidasperdidas ;
 
     /**
      * Constructor de la clase Usuario
@@ -38,25 +43,29 @@ class Usuario {
      * 
      * @returns Hangman
      */
-    
-  
-    
-    
-    public function __construct(string $nombre = null, string $clave = null, ?string $email = null, ?string $rol = null) {
-        
-        if (!is_null($nombre)) {
-            $this->nombre = $nombre;
-        }
-        if (!is_null($clave)) {
-            $this->clave = $clave;
-        }
-        if (!is_null($email)) {
-            $this->email = $email;
-        }
-        if (!is_null($rol)) {
-            $this->rol = $rol;
-        }
+    public function __construct(string $nombre = null, string $clave = null, ?string $email = null, ?string $rol = null, ?int $partidasGanadas = null, ?int $partidasPerdidas = null) {
+    if (!is_null($nombre)) {
+        $this->nombre = $nombre;
     }
+    if (!is_null($clave)) {
+        $this->clave = $clave;
+    }
+    if (!is_null($email)) {
+        $this->email = $email;
+    }
+    if (!is_null($rol)) {
+        $this->rol = $rol;
+    }    
+    
+    if (!is_null($partidasGanadas)) {
+        $this->partidasganadas = $partidasGanadas;
+    }
+    if (!is_null($partidasPerdidas)) {
+        $this->partidasperdidas = $partidasPerdidas;
+    }
+     
+}
+
 
     /**
      * Recupera el Id del usuario
@@ -75,11 +84,10 @@ class Usuario {
     public function getNombre(): string {
         return $this->nombre;
     }
-    
-    public function setId(int $contador = 0){
+
+    public function setId(int $contador = 0) {
         $this->id = ++$contador;
     }
-    
 
     /**
      * Establece el nombre del usuario
@@ -131,7 +139,7 @@ class Usuario {
     public function setEmail(string $email) {
         $this->email = $email;
     }
-    
+
     /**
      * Recupera el rol del usuario
      * 
@@ -140,7 +148,7 @@ class Usuario {
     public function getRol(): ?string {
         return $this->rol;
     }
-    
+
     /**
      * Establece el rol del usuario
      * 
@@ -151,12 +159,25 @@ class Usuario {
     public function setRol(string $rol) {
         $this->rol = $rol;
     }
-    
-    public function esAdministrador(){
-        return $this->rol === 'administrador'; //NO FUNCIONA.// VER
-       // return $this->nombre === 'admin';
+
+    public function esAdministrador() {
+        return $this->rol === 'administrador'; //NO FUNCIONA BIEN.// VER
+        // return $this->nombre === 'admin';
     }
-    
-    
-  
+
+    public function getPartidasGanadas(): ?int {
+        return $this->partidasganadas;
+    }
+
+    public function getPartidasPerdidas(): ?int {
+        return $this->partidasperdidas;
+    }
+
+    public function setPartidasGanadas(?int $partidasGanadas): void {
+        $this->partidasganadas = $partidasGanadas;
+    }
+
+    public function setPartidasPerdidas(?int $partidasPerdidas): void {
+        $this->partidasperdidas = $partidasPerdidas;
+    }
 }

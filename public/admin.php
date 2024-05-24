@@ -80,40 +80,13 @@ if (isset($_SESSION ['usuario'])) {
 
         echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Rol otorgado con Exito']);
     } 
-    elseif (isset($_REQUEST['datosPartidas'])) {
-        $idUsuario = $_REQUEST['id']; // Obtener el ID del usuario desde el formulario
-        $usuarios = $usuarioDAO->obtenerTodos();
-    if (isset($_SESSION['partidas'][$idUsuario])) {
-        $partidasUsuario = $_SESSION['partidas'][$idUsuario];
-        $partidasGanadas = [];
-        $partidasPerdidas = [];
-        
-        
-        foreach ($partidasUsuario as $partida) {
-            if ($partida->esPalabraDescubierta()) {
-                $partidasGanadas[$partida->getPalabraSecreta()] = $partida->getNumErrores();
-            } else {
-                $partidasPerdidas[] = $partida->getPalabraSecreta();
-            }
-        }
-
-        ksort($partidasGanadas);
-        sort($partidasPerdidas);
-
-        echo $blade->run("perfilAdministrador", compact('partidasGanadas', 'partidasPerdidas', 'idUsuario','usuarios'));
-    } 
-    else {
-        // Manejar el caso en que no hay partidas para este usuario
-        echo $blade->run("perfilAdministrador", [
-            'usuarios' => $usuarios,
-            'partidasGanadas' => [],
-            'partidasPerdidas' => [],
-            'idUsuario' => $idUsuario,
-            
-        ]);
-    }
-    die;
+   elseif (isset($_REQUEST['datosPartidas'])) {
+    $idUsuario = $_REQUEST['id']; // Obtener el ID del usuario desde el formulario
+    $usuarios = $usuarioDAO->obtenerTodos();
+    
+    echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
 }
+
     elseif (isset($_REQUEST['botonHashearContraseñas'])) {
 
 
