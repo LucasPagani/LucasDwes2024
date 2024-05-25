@@ -5,8 +5,8 @@ require "../vendor/autoload.php";
 use eftec\bladeone\BladeOne;
 use Dotenv\Dotenv;
 use App\Modelo\Hangman;
-use App\Almacen\AlmacenPalabrasFichero;
-
+use App\Almacen\AlmacenPalabrasRest;
+//use App\Almacen\AlmacenPalabrasFichero; // para usar con fichero nomrmal
 //use App\Almacen\AlmacenPalabrasSoap;   //Para usar con el la opcion de servicio Soap
 
 session_start();
@@ -65,12 +65,19 @@ if (isset($_SESSION['usuario'])) {
     elseif (isset($_REQUEST['botonnuevapartida'])) { // Se arranca una nueva partida
         
        $mensaje = isset($_GET['mensaje']) ? htmlspecialchars($_GET['mensaje']) : null;// si me redirigen a este script con algun mensaje
-        
+        /** //PARA USO CON SOAP
         //$wsdl = $_ENV['WSDL_ALMACEN_PALABRAS'];
         //$almacenPalabras = new AlmacenPalabrasSoap($wsdl);       // sustituimos la ruta para buscar las palabras
-        $rutaFichero = $_ENV['RUTA_ALMACEN_PALABRAS'];
+        */
+       
+       //PARA USO CON REST
+         $rest = $_ENV['REST_ALMACEN_PALABRAS'];
+        $almacenPalabras = new AlmacenPalabrasRest($rest);
+       
+      /** //PARA USO NORMAL
+       * $rutaFichero = $_ENV['RUTA_ALMACEN_PALABRAS'];
         $almacenPalabras = new AlmacenPalabrasFichero($rutaFichero);
-
+*/
         $partida = new Hangman($almacenPalabras, MAX_NUM_ERRORES);
         $_SESSION['partida'] = $partida;
 // Invoco la vista del juego para empezar a jugar
