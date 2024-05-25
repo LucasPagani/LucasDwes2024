@@ -93,6 +93,14 @@ class UsuarioDAO {
         $result = $stmt->execute();
         return ($result);
     }
+    
+    public function quitarRolAdministrador($idUsuario) {
+        $sql = "UPDATE usuarios SET rol = '' WHERE id = :id";
+        $stmt = $this->bd->prepare($sql);
+        $stmt->bindParam(':id', $idUsuario, PDO::PARAM_INT);
+        $result = $stmt->execute();
+        return ($result);
+    }
 
     public function hashearContraseñasSHA() {
         // Seleccionar id y clave de todos los usuarios

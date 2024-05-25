@@ -51,8 +51,9 @@
                         <td>{{$item->getPartidasPerdidas()}}</td>
                         <td>
                             <form action="admin.php" method='GET' class="d-inline">
-                                <input type="submit" class="btn btn-warning m2" value="Es Admin" name="otorgarRolAdmin" >
+                                <input type="submit" class="btn btn-warning m2" value="Cambiar Rol" id="btnrol" name="otorgarRolAdmin" >
                                 <input type="hidden" name="id" value="{{$item->getId()}}">
+                                <input type="hidden" name="rol" value="{{$item->getRol()}}">
                                 <input type="submit" onclick="return confirm('¿Borrar Producto?')" class="btn btn-danger" value="Borrar" name="botonEliminarUsuario">
                                 
                             </form>

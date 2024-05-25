@@ -73,20 +73,23 @@ if (isset($_SESSION ['usuario'])) {
         die;
     } 
     elseif (isset($_REQUEST['otorgarRolAdmin'])) {
+    $idUsuario = $_REQUEST['id'];
+    $rolActual = $_REQUEST['rol'];
 
-        $idUsuario = $_REQUEST['id'];
+    if ($rolActual == 'administrador') {
+        // Cambiar rol a usuario normal
+        $usuarioDAO->quitarRolAdministrador($idUsuario);
+    } else {
+        // Cambiar rol a admin
         $usuarioDAO->asignarRolAdministrador($idUsuario);
-        $usuarios = $usuarioDAO->obtenerTodos();
+    }
 
-        echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Rol otorgado con Exito']);
-    } 
-   /**elseif (isset($_REQUEST['datosPartidas'])) {
-    $idUsuario = $_REQUEST['id']; 
+    // Obtener los usuarios actualizados
     $usuarios = $usuarioDAO->obtenerTodos();
-    
-    echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios]);
-}*/
 
+    // Mostrar la vista con los usuarios actualizados
+    echo $blade->run("perfilAdministrador", ['usuarios' => $usuarios, 'mensaje' => 'Rol cambiado con éxito']);
+}
     elseif (isset($_REQUEST['botonHashearContraseñas'])) {
 
 
