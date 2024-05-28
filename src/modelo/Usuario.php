@@ -34,6 +34,11 @@ class Usuario {
     
     private ?int $partidasperdidas ;
 
+
+        private ?string $opinion;
+    
+    private ?\DateTime $fecha;
+
     /**
      * Constructor de la clase Usuario
      * 
@@ -179,5 +184,21 @@ class Usuario {
 
     public function setPartidasPerdidas(?int $partidasPerdidas): void {
         $this->partidasperdidas = $partidasPerdidas;
+    }
+    
+        public function getOpinion(): ?string {
+        return $this->opinion;
+    }
+
+    public function getFecha(): ?\DateTime {
+        return $this->fecha;
+    }
+
+    public function setOpinion(?string $opinion): void {
+        $this->opinion = $opinion;
+    }
+
+    public function setFecha(?\DateTime $fecha): void {
+        $this->fecha = $fecha;
     }
 }

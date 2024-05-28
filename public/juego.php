@@ -83,7 +83,8 @@ if (isset($_SESSION['usuario'])) {
 // Invoco la vista del juego para empezar a jugar
         echo $blade->run("juego", compact('usuario', 'partida', 'mensaje'));
         die;
-    } elseif (isset($_REQUEST['botonpuntuacionpartidas'])) {// Se arranca una nueva partida
+    } 
+    elseif (isset($_REQUEST['botonpuntuacionpartidas'])) {// Se arranca una nueva partida
         $partidas = $_SESSION['partidas'] ?? [];
         $panelPuntuacion = [];
         foreach ($partidas as $partida) {

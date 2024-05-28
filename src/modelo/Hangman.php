@@ -265,5 +265,29 @@ class Hangman {
         return $puntuacion;
     }
 
+    /*
+     * public function obtenerPalabra($dificultad) {
+     
+        $palabras = file($this->rutaFichero, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $palabras_filtradas = [];
 
+        foreach ($palabras as $palabra) {
+            $longitud = strlen($palabra);
+            if ($dificultad == 'facil' && $longitud < 4) {
+                $palabras_filtradas[] = $palabra;
+            } elseif ($dificultad == 'medio' && $longitud >= 4 && $longitud <= 6) {
+                $palabras_filtradas[] = $palabra;
+            } elseif ($dificultad == 'dificil' && $longitud > 6) {
+                $palabras_filtradas[] = $palabra;
+            }
+        }
+
+        if (empty($palabras_filtradas)) {
+            return null; // No hay palabras para la dificultad seleccionada
+        }
+
+        return $palabras_filtradas[array_rand($palabras_filtradas)];
+    }
+    */
+    
 }

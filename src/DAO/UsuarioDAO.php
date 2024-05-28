@@ -95,7 +95,7 @@ class UsuarioDAO {
     }
     
     public function quitarRolAdministrador($idUsuario) {
-        $sql = "UPDATE usuarios SET rol = '' WHERE id = :id";
+        $sql = "UPDATE usuarios SET rol = 'Jugador' WHERE id = :id";
         $stmt = $this->bd->prepare($sql);
         $stmt->bindParam(':id', $idUsuario, PDO::PARAM_INT);
         $result = $stmt->execute();
@@ -170,4 +170,23 @@ class UsuarioDAO {
         ]);
         return $result;
     }
+    
+    /**public function guardaropinion(int $idUsuario, \DateTime $fecha, string $opinion){
+        $sql = "update usuarios set fecha = :fecha, opinion = :opinion, where idUsuario = :id";
+        $sth = $this->bd->prepare($sql);
+        $result = $sth->execute([":fecha" => $usuario->getFecha(), ":opinion" => $usuario->getOpinion(), ":idUsuario" => $usuario->getId()]);
+        return ($result);
+        
+    }*/
+    
+    public function guardaropinion(int $idUsuario, string $fecha, string $opinion) {
+    $sql = "UPDATE usuarios SET fecha = :fecha, opinion = :opinion WHERE id = :idUsuario";
+    $sth = $this->bd->prepare($sql);
+    $result = $sth->execute([":fecha" => $fecha, ":opinion" => $opinion, ":idUsuario" => $idUsuario]);
+    return $result;
 }
+
+    
+    
+}
+

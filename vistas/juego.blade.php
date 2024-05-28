@@ -16,6 +16,9 @@
 <li class="nav-item">
     <a class="nav-link" aria-current="page" href="juego.php?botonpuntuacionpartidas">Puntuación Partidas</a>
 </li>
+<li class="nav-item">
+    <a class="nav-link" aria-current="page" href="index.php?botonformopinion">Dejanos tu opinion</a>
+</li>
 @endsection
 @section('content')
 @set($imgsHangman=['Hangman-0.png','Hangman-1.png','Hangman-2.png','Hangman-3.png','Hangman-4.png','Hangman-5.png'])

@@ -148,6 +148,24 @@ if (isset($_SESSION['usuario'])) {
          header("Location: juego.php?botonnuevapartida&mensaje=Guardado en la Base de datos con exito");
         
     } 
+ 
+        
+    elseif (isset($_REQUEST['botonformopinion'])) {
+    echo $blade->run("opinionjuego");
+    die;
+}   
+    elseif (isset($_REQUEST['botonopinion'])) {
+    $fecha = new DateTime();
+    $fechaFormatted = $fecha->format('Y-m-d');
+    $usuario = $_SESSION['usuario'];
+    $idUsuario = $usuario->getId();
+    $opinion = filter_input(INPUT_POST, 'campoopinion', FILTER_SANITIZE_STRING);
+
+    $usuarioDAO->guardaropinion($idUsuario, $fechaFormatted, $opinion);
+
+    header("Location: juego.php?botonnuevapartida&mensaje=Opinión guardada con exito exito");
+}
+
     else {
         if (isset($_SESSION['partida'])) { // Si hay una partida en curso
             header("Location:juego.php");
