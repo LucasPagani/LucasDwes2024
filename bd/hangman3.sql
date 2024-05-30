@@ -16,6 +16,8 @@ CREATE TABLE usuarios (
   rol varchar(60) COLLATE utf8_spanish_ci,
   partidasganadas varchar(60) COLLATE utf8_spanish_ci,
   partidasperdidas varchar(60) COLLATE utf8_spanish_ci
+  fecha date(60) COLLATE utf8_spanish_ci
+  opinion varchar(60) COLLATE utf8_spanish_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 

@@ -33,13 +33,19 @@ class Usuario {
     private ?int $partidasganadas ;
     
     private ?int $partidasperdidas ;
-
+    
+    private ?int $partidasjugadas ;
+    
+    private ?int $puntuacionpartidas ;
 
         private ?string $opinion;
     
-    private ?\DateTime $fecha;
+    private ?string $fecha;
+    
+    private ?int $voto;
+    
 
-    /**
+        /**
      * Constructor de la clase Usuario
      * 
      * @param string $nombre Nombre del usuario
@@ -48,7 +54,7 @@ class Usuario {
      * 
      * @returns Hangman
      */
-    public function __construct(string $nombre = null, string $clave = null, ?string $email = null, ?string $rol = null, ?int $partidasGanadas = null, ?int $partidasPerdidas = null) {
+    public function __construct(string $nombre = null, string $clave = null, ?string $email = null, ?string $rol = null, ?int $partidasGanadas = null, ?int $partidasPerdidas = null, ?int $voto = null,?int $partidasjugadas = null, ?int $puntuacionpartidas = null) {
     if (!is_null($nombre)) {
         $this->nombre = $nombre;
     }
@@ -67,6 +73,15 @@ class Usuario {
     }
     if (!is_null($partidasPerdidas)) {
         $this->partidasperdidas = $partidasPerdidas;
+    }
+    if (!is_null($voto)) {
+        $this->voto = $voto;
+    }
+     if (!is_null($partidasjugadas)) {
+        $this->partidasjugadas = $partidasjugadas;
+    }
+     if (!is_null($puntuacionpartidas)) {
+        $this->puntuacionpartidas = $puntuacionpartidas;
     }
      
 }
@@ -201,4 +216,28 @@ class Usuario {
     public function setFecha(?\DateTime $fecha): void {
         $this->fecha = $fecha;
     }
+    public function getPartidasjugadas(): ?int {
+        return $this->partidasjugadas;
+    }
+
+    public function getPuntuacionpartidas(): ?int {
+        return $this->puntuacionpartidas;
+    }
+
+    public function setPartidasjugadas(?int $partidasjugadas): void {
+        $this->partidasjugadas = $partidasjugadas;
+    }
+
+    public function setPuntuacionpartidas(?int $puntuacionpartidas): void {
+        $this->puntuacionpartidas = $puntuacionpartidas;
+    }
+    public function getVoto(): ?int {
+        return $this->voto;
+    }
+
+    public function setVoto(?int $voto): void {
+        $this->voto = $voto;
+    }
+
+
 }

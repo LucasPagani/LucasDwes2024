@@ -55,7 +55,7 @@ class UsuarioDAO {
     }
 
     public function recuperaPorCredencialHashed(string $nombre, string $clave): ?Usuario {
-        // Hashear la contraseña proporcionada usando SHA-256
+        // recuperar contraseña proporcionada usando SHA-256
         $pwdHashed = hash('sha256', $clave);
         // Seleccionar el usuario que coincida con el nombre y la contraseña hasheada
         $sql = 'SELECT * FROM usuarios WHERE usuario = :nombre AND clave = :pwdHashed';
@@ -93,7 +93,7 @@ class UsuarioDAO {
         $result = $stmt->execute();
         return ($result);
     }
-    
+
     public function quitarRolAdministrador($idUsuario) {
         $sql = "UPDATE usuarios SET rol = 'Jugador' WHERE id = :id";
         $stmt = $this->bd->prepare($sql);
@@ -142,6 +142,7 @@ class UsuarioDAO {
         }
     }
 
+    //A esta funcion le tengo que mandar como parametro una nueva contraseña elegida por el usuario para quitaqr el hash
     public function quitarHashContraseñasAuto(string $nuevaClave) {
         // Seleccionar todos los IDs de los usuarios
         $sql = "SELECT id FROM usuarios";
@@ -160,7 +161,7 @@ class UsuarioDAO {
         }
     }
 
-    public function guardaPartidas(int $idUsuario, int $cantidadGanadas, int $cantidadPerdidas): bool {
+   /* public function guardaPartidas(int $idUsuario, int $cantidadGanadas, int $cantidadPerdidas): bool {
         $sql = "UPDATE usuarios SET partidasganadas = :partidasGanadas, partidasperdidas = :partidasPerdidas WHERE id = :idUsuario";
         $sth = $this->bd->prepare($sql);
         $result = $sth->execute([
@@ -169,24 +170,91 @@ class UsuarioDAO {
             ":idUsuario" => $idUsuario
         ]);
         return $result;
-    }
-    
-    /**public function guardaropinion(int $idUsuario, \DateTime $fecha, string $opinion){
-        $sql = "update usuarios set fecha = :fecha, opinion = :opinion, where idUsuario = :id";
-        $sth = $this->bd->prepare($sql);
-        $result = $sth->execute([":fecha" => $usuario->getFecha(), ":opinion" => $usuario->getOpinion(), ":idUsuario" => $usuario->getId()]);
-        return ($result);
-        
     }*/
-    
-    public function guardaropinion(int $idUsuario, string $fecha, string $opinion) {
-    $sql = "UPDATE usuarios SET fecha = :fecha, opinion = :opinion WHERE id = :idUsuario";
-    $sth = $this->bd->prepare($sql);
-    $result = $sth->execute([":fecha" => $fecha, ":opinion" => $opinion, ":idUsuario" => $idUsuario]);
-    return $result;
-}
 
-    
-    
-}
+    /*     * public function guardaropinion(int $idUsuario, \DateTime $fecha, string $opinion){
+      $sql = "update usuarios set fecha = :fecha, opinion = :opinion, where idUsuario = :id";
+      $sth = $this->bd->prepare($sql);
+      $result = $sth->execute([":fecha" => $usuario->getFecha(), ":opinion" => $usuario->getOpinion(), ":idUsuario" => $usuario->getId()]);
+      return ($result);
 
+      } */
+
+    public function guardaropinion(int $idUsuario, string $fecha, string $opinion, int $votacion) {
+        $sql = "UPDATE usuarios SET fecha = :fecha, opinion = :opinion, voto = :votacion WHERE id = :idUsuario";
+        $sth = $this->bd->prepare($sql);
+        $result = $sth->execute([":fecha" => $fecha, ":opinion" => $opinion, ":votacion" =>$votacion, ":idUsuario" => $idUsuario]);
+        return $result;
+    }
+
+    public function guardaPartidas(int $idUsuario, int $cantidadGanadas, int $cantidadPerdidas, int $cantidadJugadas): bool {
+        $sql = "UPDATE usuarios SET partidasganadas = :partidasGanadas, partidasperdidas = :partidasPerdidas , partidasjugadas = :partidasJugadas WHERE id = :idUsuario";
+        $sth = $this->bd->prepare($sql);
+        $result = $sth->execute([
+            ":partidasGanadas" => $cantidadGanadas,
+            ":partidasPerdidas" => $cantidadPerdidas,
+            ":partidasJugadas" => $cantidadJugadas,
+            ":idUsuario" => $idUsuario
+        ]);
+        return $result;
+    }
+
+    public function guardarPuntuacion(int $puntuacionTotal, int $idUsuario) {
+        $sql = "UPDATE usuarios SET puntuacionpartidas = :puntuacionTotal WHERE id = :idUsuario";
+        $sth = $this->bd->prepare($sql);
+        $result = $sth->execute([
+            ":puntuacionTotal" => $puntuacionTotal,
+            ":idUsuario" => $idUsuario
+        ]);
+        return $result;
+    }
+
+    public function obtenerMediaVotos() {
+        try {
+            $stmt = $this->bd->query('SELECT SUM(voto) AS total_votos, COUNT(*) AS num_usuarios FROM usuarios');
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $sumaVotos = $result['total_votos'];
+            $numUsuarios = $result['num_usuarios'];
+
+            // Calcular la media de votos
+            if ($numUsuarios > 0) {
+                return $sumaVotos / $numUsuarios;
+            } else {
+                return 0; // Evitar división por cero
+            }
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+            return 0;
+        }
+    }
+
+    /**public function creaVoto(int $id, int $votacion) {
+        $sql = "UPDATE usuarios SET voto = :votacion WHERE id = :id";
+        $sth = $this->bd->prepare($sql);
+        $result = $sth->execute([
+            ":id" => $id,
+            ":votacion" => $votacion
+        ]);
+        return $result;
+    }*/
+
+    public function obtenerPuntuacionPartidas($idUsuario) {
+        $sql = "SELECT puntuacionpartidas FROM usuarios WHERE id = :idUsuario";
+        $sth = $this->bd->prepare($sql);
+        $sth->execute([':idUsuario' => $idUsuario]);
+        return $sth->fetchColumn(); // Devuelve el valor de puntuacionpartidas
+    }
+
+    public function obtenerPartidasJugadas($idUsuario) {
+        $sql = "SELECT partidasjugadas FROM usuarios WHERE id = :idUsuario";
+        $sth = $this->bd->prepare($sql);
+        $sth->execute([':idUsuario' => $idUsuario]);
+        return $sth->fetchColumn(); // Devuelve el valor de partidasjugadas
+    }
+
+    public function resetearPartidas(int $idUsuario): bool {
+        $sql = "UPDATE usuarios SET partidasganadas = 0, partidasperdidas = 0, partidasjugadas = 0, puntuacionpartidas = 0 WHERE id = :idUsuario";
+        $sth = $this->bd->prepare($sql);
+        return $sth->execute([':idUsuario' => $idUsuario]);
+    }
+}

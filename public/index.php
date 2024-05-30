@@ -125,7 +125,7 @@ if (isset($_SESSION['usuario'])) {
             echo $blade->run("formlogin", ['mensaje' => 'Usuario creado con éxito']);
             die();
         }
-    }
+    } 
     elseif (isset($_REQUEST['botonguardarbbdd'])) {
         $partidas = $_SESSION['partidas'] ?? [];
         $usuario = $_SESSION['usuario'];
@@ -139,42 +139,58 @@ if (isset($_SESSION['usuario'])) {
                 $partidasPerdidas[] = $partida->getPalabraSecreta();
             }
         }
-       
+
         $cantidadGanadas = count($partidasGanadas);
         $cantidadPerdidas = count($partidasPerdidas);
 
-        $usuarioDAO->guardaPartidas($idUsuario, $cantidadGanadas,$cantidadPerdidas);
-       
-         header("Location: juego.php?botonnuevapartida&mensaje=Guardado en la Base de datos con exito");
-        
+        $usuarioDAO->guardaPartidas($idUsuario, $cantidadGanadas, $cantidadPerdidas);
+
+        header("Location: juego.php?botonnuevapartida&mensaje=Guardado en la Base de datos con exito");
     } 
- 
-        
     elseif (isset($_REQUEST['botonformopinion'])) {
-    echo $blade->run("opinionjuego");
-    die;
-}   
+        echo $blade->run("opinionjuego");
+        die;
+    }
     elseif (isset($_REQUEST['botonopinion'])) {
-    $fecha = new DateTime();
-    $fechaFormatted = $fecha->format('Y-m-d');
-    $usuario = $_SESSION['usuario'];
-    $idUsuario = $usuario->getId();
-    $opinion = filter_input(INPUT_POST, 'campoopinion', FILTER_SANITIZE_STRING);
+        $fecha = new DateTime();
+        $fechaFormatted = $fecha->format('Y-m-d');
+        $usuario = $_SESSION['usuario'];
+        $idUsuario = $usuario->getId();
+        $opinion = filter_input(INPUT_POST, 'campoopinion', FILTER_SANITIZE_STRING);
+        $votacion = isset($_POST['rating']) ? intval($_POST['rating']) : null;
 
-    $usuarioDAO->guardaropinion($idUsuario, $fechaFormatted, $opinion);
+        // Asegúrate de que tanto la opinión como la votación están presentes
+        if ($opinion && $votacion) {
+            $usuarioDAO->guardaropinion($idUsuario, $fechaFormatted, $opinion, $votacion);
 
-    header("Location: juego.php?botonnuevapartida&mensaje=Opinión guardada con exito exito");
-}
-
+            header("Location: juego.php?botonnuevapartida&mensaje=¡¡¡Gracias por darnos tu opinión!!!");
+            exit; // Termina la ejecución del script
+        } else {
+            // Manejo de errores en caso de que faltan datos
+            echo $blade->run("juego", ['error' => 'Por favor, completa todos los campos.']);
+            exit; // Termina la ejecución del script
+        }
+    } 
+    elseif (isset($_REQUEST['verVotos'])) {
+    header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
+    try {
+        $mediaVotos = $usuarioDAO->obtenerMediaVotos();
+        echo json_encode(['voto' => $mediaVotos]);
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Error al obtener la media de votos']);
+    }
+    exit; // Termina la ejecución del script
+} 
     else {
         if (isset($_SESSION['partida'])) { // Si hay una partida en curso
-            header("Location:juego.php");
+            header("Location: juego.php");
         } else {
             // Redirijo al cliente al script de gestión del juego
-            header("Location:juego.php?botonnuevapartida");
-            die;
+            header("Location: juego.php?botonnuevapartida");
+            exit;
         }
     }
+
 
     // Sino 
 } 
@@ -199,13 +215,11 @@ else {
             die;
         }
         // Si se solicita el formulario de registro
-    } 
-    elseif (isset($_REQUEST['botonregistro'])) {
+    } elseif (isset($_REQUEST['botonregistro'])) {
         echo $blade->run("formregistro");
         die;
         // Si se solicita que se procese una petición de registro
-    } 
-    elseif (isset($_REQUEST['botonprocregistro'])) {
+    } elseif (isset($_REQUEST['botonprocregistro'])) {
         $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
         $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
         $email = trim(filter_input(INPUT_POST, 'email', FILTER_UNSAFE_RAW));
@@ -232,8 +246,7 @@ else {
                 die();
             }
         }
-    } 
-    else {
+    } else {
         // Invoco la vista del formulario de login
         echo $blade->run("formlogin");
         die;

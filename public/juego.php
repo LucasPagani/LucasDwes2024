@@ -65,7 +65,8 @@ if (isset($_SESSION['usuario'])) {
     elseif (isset($_REQUEST['botonnuevapartida'])) { // Se arranca una nueva partida
         
        $mensaje = isset($_GET['mensaje']) ? htmlspecialchars($_GET['mensaje']) : null;// si me redirigen a este script con algun mensaje
-        /** //PARA USO CON SOAP
+        
+       /** //PARA USO CON SOAP
         //$wsdl = $_ENV['WSDL_ALMACEN_PALABRAS'];
         //$almacenPalabras = new AlmacenPalabrasSoap($wsdl);       // sustituimos la ruta para buscar las palabras
         */
@@ -92,7 +93,8 @@ if (isset($_SESSION['usuario'])) {
         }
         echo $blade->run("puntuacionpartidas", compact('panelPuntuacion', 'usuario'));
         die;
-    } elseif (isset($_REQUEST['botonresumenpartidas'])) {// Se arranca una nueva partida
+    } 
+    elseif (isset($_REQUEST['botonresumenpartidas'])) {// Se arranca una nueva partida
         $partidas = $_SESSION['partidas'] ?? [];
         $partidasGanadas = [];
         $partidasPerdidas = [];
@@ -108,15 +110,16 @@ if (isset($_SESSION['usuario'])) {
 
         echo $blade->run("resumenpartidas", compact('partidasGanadas', 'partidasPerdidas', 'usuario'));
         die;
-    } elseif (isset($_REQUEST['botonformpartidapersonalizada'])) {// Se arranca una nueva partida
+    } 
+    elseif (isset($_REQUEST['botonformpartidapersonalizada'])) {// Se arranca una nueva partida
         echo $blade->run("formpartidapersonalizada", compact('usuario'));
         die;
-    } elseif (isset($_REQUEST['botonpartidapersonalizada'])) {// Se arranca una nueva partida
+    } 
+    elseif (isset($_REQUEST['botonpartidapersonalizada'])) {// Se arranca una nueva partida
         $minLongitud = filter_input(INPUT_POST, 'minlongitud');
         $minLongitudError = !empty($minLongitud) && esLongitudMinimaError($minLongitud);
         $maxLongitud = filter_input(INPUT_POST, 'maxlongitud');
         $maxLongitudError = !empty($maxLongitud) && esLongitudMaximaError($maxLongitud);
-        ;
         $maxminError = !empty($minLongitud) && !empty($maxLongitud) && !esLongitudMinimaError($minLongitud) && !esLongitudMaximaError($maxLongitud) && ($minLongitud > $maxLongitud);
         $contiene = trim(filter_input(INPUT_POST, 'contiene'));
         $contieneError = !empty($contiene) && esContieneError($contiene);
@@ -134,7 +137,8 @@ if (isset($_SESSION['usuario'])) {
             echo $blade->run("juego", compact('usuario', 'partida'));
             die;
         }
-    } else { //En cualquier otro caso
+    } 
+    else { //En cualquier otro caso
         $partida = $_SESSION['partida'];
         echo $blade->run("juego", compact('usuario', 'partida'));
         die;

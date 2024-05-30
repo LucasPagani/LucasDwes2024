@@ -134,7 +134,7 @@ if (isset($_SESSION ['usuario'])) {
             $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
 
            // $usuario = $usuarioDAO->recuperaPorCredencialHashed($nombre, $clave); //para logearse con la contraseña hasheada(NO FUNCIONA)
-            $usuario = $usuarioDAO->recuperaPorCredencial($nombre, $clave);
+            $usuario = $usuarioDAO->recuperaPorCredencialHashed($nombre, $clave);
             $usuarios = $usuarioDAO->obtenerTodos();
             // Si los credenciales son correctos
             if ($usuario) {
