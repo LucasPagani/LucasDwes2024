@@ -6,7 +6,7 @@
 @section('navbar')
 
                 <div class="m-2">Valoración de la Aplicación</div>
-                <div class="star-rating m-3" id='estrellas'>
+                  <div class="star-rating m-3" id='estrellas'>
                     @if(isset($mediaVotos))
                         @php
                             function mostrarEstrellas($mediaVotos) {

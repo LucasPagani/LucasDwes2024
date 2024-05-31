@@ -172,7 +172,7 @@ if (isset($_SESSION['usuario'])) {
         }
     } 
     elseif (isset($_REQUEST['verVotos'])) {
-    header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
+     header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
     try {
         $mediaVotos = $usuarioDAO->obtenerMediaVotos();
         echo json_encode(['voto' => $mediaVotos]);
