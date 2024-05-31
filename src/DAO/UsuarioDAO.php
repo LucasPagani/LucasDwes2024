@@ -161,7 +161,7 @@ class UsuarioDAO {
         }
     }
 
-   /* public function guardaPartidas(int $idUsuario, int $cantidadGanadas, int $cantidadPerdidas): bool {
+    public function guardaPartidas(int $idUsuario, int $cantidadGanadas, int $cantidadPerdidas): bool {
         $sql = "UPDATE usuarios SET partidasganadas = :partidasGanadas, partidasperdidas = :partidasPerdidas WHERE id = :idUsuario";
         $sth = $this->bd->prepare($sql);
         $result = $sth->execute([
@@ -170,7 +170,7 @@ class UsuarioDAO {
             ":idUsuario" => $idUsuario
         ]);
         return $result;
-    }*/
+    }
 
     /*     * public function guardaropinion(int $idUsuario, \DateTime $fecha, string $opinion){
       $sql = "update usuarios set fecha = :fecha, opinion = :opinion, where idUsuario = :id";
@@ -187,7 +187,7 @@ class UsuarioDAO {
         return $result;
     }
 
-    public function guardaPartidas(int $idUsuario, int $cantidadGanadas, int $cantidadPerdidas, int $cantidadJugadas): bool {
+   /** public function guardaPartidas(int $idUsuario, int $cantidadGanadas, int $cantidadPerdidas, int $cantidadJugadas): bool {
         $sql = "UPDATE usuarios SET partidasganadas = :partidasGanadas, partidasperdidas = :partidasPerdidas , partidasjugadas = :partidasJugadas WHERE id = :idUsuario";
         $sth = $this->bd->prepare($sql);
         $result = $sth->execute([
@@ -197,7 +197,7 @@ class UsuarioDAO {
             ":idUsuario" => $idUsuario
         ]);
         return $result;
-    }
+    }*/
 
     public function guardarPuntuacion(int $puntuacionTotal, int $idUsuario) {
         $sql = "UPDATE usuarios SET puntuacionpartidas = :puntuacionTotal WHERE id = :idUsuario";

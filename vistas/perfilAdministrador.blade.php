@@ -24,9 +24,11 @@
     <div class="row">
         <div class="col-12">
             <div class="mb-3">
-                <a class="btn btn-secondary me-2 mb-2" aria-current="page" href="admin.php?botonCrearUsuario">Crear Usuario</a>
-                <a class="btn btn-primary me-2 mb-2" aria-current="page" href="admin.php?botonHashearContraseñas">Hashear Contraseña</a>            
-                <a class="btn btn-danger mb-2" aria-current="page" href="admin.php?quitarHashContraseñas">Quitar Hash Contraseña</a>            
+                <a class="btn btn-success me-2 mb-2" aria-current="page" href="admin.php?botonCrearUsuario">Crear Usuario</a>
+                <a class="btn btn-warning me-2 mb-2" aria-current="page" href="admin.php?botonHashearContraseñas">Hashear Contraseña</a>            
+                <a class="btn btn-danger mb-2" aria-current="page" href="admin.php?quitarHashContraseñas">Quitar Hash Contraseña</a>
+                <a href="index.php?verVotos" aria-current="page" class=" btn btn-success me-2 mb-2" id="verVotos">Media Votos</a>
+                    <h3 id="votosTotales"  class="text-success mb-2"></h3>
             </div>
             <table class="table">
                 <thead>
@@ -73,4 +75,8 @@
         </div>
     </div>
 </div>    
+
 @endsection
+@push('scripts')
+<script src="assets/js/votos.js"></script>
+@endpush

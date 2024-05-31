@@ -3,7 +3,7 @@
 {{-- Sección aporta el título de la página --}}
 @section('title', 'Introduce Jugada')
 {{-- Sección muestra vista de juego para que el usuario elija una letra --}}
-@section ('navbar')
+@section('navbar')
 <li class="nav-item">
     <a class="nav-link" aria-current="page" href="index.php?botonguardarbbdd">Guardar Partida</a>
 </li>
@@ -24,13 +24,26 @@
 @set($imgsHangman=['Hangman-0.png','Hangman-1.png','Hangman-2.png','Hangman-3.png','Hangman-4.png','Hangman-5.png'])
 <div class="container">
     
-     @if (isset($mensaje)) 
+    @if (isset($mensaje)) 
         <div  class="alert alert-primary" role="alert">{{ $mensaje }}</div>
-        @endif
-            
+    @endif
+        
     <div class="position-relative p-5">
         <div class="position-absolute top-50 start-50 translate-middle">
             <h1 id='mensaje_fin'>{{ $partida->esFin() ? ($partida->esPalabraDescubierta() ? "Enhorabuena!" : "Has perdido!") : ""}}</h1>
+            
+            {{-- Mostrar el tiempo transcurrido si la partida ha terminado --}}
+            @if ($partida->esFin() && isset($_SESSION['hora_inicio']))
+                @php
+                    $horaInicio = $_SESSION['hora_inicio'];
+                    $horaFin = new DateTime();
+                    $interval = $horaInicio->diff($horaFin);
+                @endphp
+                <h2>Tiempo de juego: {{ $interval->format('%i minutos %s segundos') }}</h2>
+                @php
+                    unset($_SESSION['hora_inicio']); // Eliminar la hora de inicio para la próxima partida
+                @endphp
+            @endif
         </div>
     </div>
     <div class="row">
@@ -43,12 +56,15 @@
 
                     <div class="input-group-append">
                         <input class="btn btn-outline-secondary mx-1" name="botonenviarjugada" type="submit" value="Enviar Jugada" {{ $partida->esFin() ? "disabled" : "" }}>
-                    </div>
+                    </div><br>
                     <div class="input-group-append">
                         <input class="btn btn-outline-secondary mx-1" id="botonpista" {{ $partida->esFin() ? "disabled" : "" }} name="botonpista" type="submit" value="Pista">
                     </div>
                     <div class="input-group-append">
                         <input class="btn btn-outline-secondary mx-1" id="botonformpartidapersonalizada" {{ $partida->esFin() ? "disabled" : "" }} name="botonformpartidapersonalizada" type="submit" value="Nueva Partida Personalizada">
+                    </div>
+                     <div class="input-group-append">
+                        <input class="btn btn-outline-secondary mx-1" id="botonpartidaportiempo" {{ $partida->esFin() ? "disabled" : "" }} name="botonpartidaportiempo" type="submit" value="Partida por Tiempo">
                     </div>
                     <div class="invalid-feedback">
                         La letra no es correcta o ya se ha introducido.

@@ -5,6 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>@yield('title')</title>
         <link rel="stylesheet" href="assets/css/bootstrap/bootstrap.min.css">
+         <style>
+            .star {
+                font-size: 1.5em;
+                color: gold;
+            }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-expand-sm navbar-light bg-light">

@@ -1,4 +1,4 @@
-<?php
+-<?php
 
 require "../vendor/autoload.php";
 
@@ -215,11 +215,13 @@ else {
             die;
         }
         // Si se solicita el formulario de registro
-    } elseif (isset($_REQUEST['botonregistro'])) {
+    } 
+    elseif (isset($_REQUEST['botonregistro'])) {
         echo $blade->run("formregistro");
         die;
         // Si se solicita que se procese una petición de registro
-    } elseif (isset($_REQUEST['botonprocregistro'])) {
+    } 
+    elseif (isset($_REQUEST['botonprocregistro'])) {
         $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_UNSAFE_RAW));
         $clave = trim(filter_input(INPUT_POST, 'clave', FILTER_UNSAFE_RAW));
         $email = trim(filter_input(INPUT_POST, 'email', FILTER_UNSAFE_RAW));
@@ -246,11 +248,15 @@ else {
                 die();
             }
         }
-    } else {
-        // Invoco la vista del formulario de login
-        echo $blade->run("formlogin");
-        die;
-    }
+    } 
+    else {
+    // Obtener la valoración media
+    $mediaVotos = $usuarioDAO->obtenerMediaVotos(); // Reemplaza $tuObjeto con la instancia correcta de tu clase
+
+    // Invocar la vista del formulario de login con la valoración media
+    echo $blade->run("formlogin", compact('mediaVotos'));
+    die;
+}
 }
 
 

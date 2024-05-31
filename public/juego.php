@@ -6,6 +6,7 @@ use eftec\bladeone\BladeOne;
 use Dotenv\Dotenv;
 use App\Modelo\Hangman;
 use App\Almacen\AlmacenPalabrasRest;
+
 //use App\Almacen\AlmacenPalabrasFichero; // para usar con fichero nomrmal
 //use App\Almacen\AlmacenPalabrasSoap;   //Para usar con el la opcion de servicio Soap
 
@@ -54,38 +55,33 @@ if (isset($_SESSION['usuario'])) {
         echo $blade->run("juego", compact('usuario', 'partida', 'error'));
         die;
 // Sino si se solicita una nueva partida
-    } 
-    elseif (isset($_REQUEST['botonpista'])) {
+    } elseif (isset($_REQUEST['botonpista'])) {
         $partida = $_SESSION['partida'];
         $pista = $partida->damePista();
         header('Content-type: application/json');
         echo json_encode(['letra' => $pista]);
         die;
-    } 
-    elseif (isset($_REQUEST['botonnuevapartida'])) { // Se arranca una nueva partida
-        
-       $mensaje = isset($_GET['mensaje']) ? htmlspecialchars($_GET['mensaje']) : null;// si me redirigen a este script con algun mensaje
-        
-       /** //PARA USO CON SOAP
-        //$wsdl = $_ENV['WSDL_ALMACEN_PALABRAS'];
-        //$almacenPalabras = new AlmacenPalabrasSoap($wsdl);       // sustituimos la ruta para buscar las palabras
-        */
-       
-       //PARA USO CON REST
-         $rest = $_ENV['REST_ALMACEN_PALABRAS'];
+    } elseif (isset($_REQUEST['botonnuevapartida'])) { // Se arranca una nueva partida
+        $mensaje = isset($_GET['mensaje']) ? htmlspecialchars($_GET['mensaje']) : null; // si me redirigen a este script con algun mensaje
+
+        /** //PARA USO CON SOAP
+          //$wsdl = $_ENV['WSDL_ALMACEN_PALABRAS'];
+          //$almacenPalabras = new AlmacenPalabrasSoap($wsdl);       // sustituimos la ruta para buscar las palabras
+         */
+        //PARA USO CON REST
+        $rest = $_ENV['REST_ALMACEN_PALABRAS'];
         $almacenPalabras = new AlmacenPalabrasRest($rest);
-       
-      /** //PARA USO NORMAL
-       * $rutaFichero = $_ENV['RUTA_ALMACEN_PALABRAS'];
-        $almacenPalabras = new AlmacenPalabrasFichero($rutaFichero);
-*/
+
+        /** //PARA USO NORMAL
+         * $rutaFichero = $_ENV['RUTA_ALMACEN_PALABRAS'];
+          $almacenPalabras = new AlmacenPalabrasFichero($rutaFichero);
+         */
         $partida = new Hangman($almacenPalabras, MAX_NUM_ERRORES);
         $_SESSION['partida'] = $partida;
 // Invoco la vista del juego para empezar a jugar
         echo $blade->run("juego", compact('usuario', 'partida', 'mensaje'));
         die;
-    } 
-    elseif (isset($_REQUEST['botonpuntuacionpartidas'])) {// Se arranca una nueva partida
+    } elseif (isset($_REQUEST['botonpuntuacionpartidas'])) {// Se arranca una nueva partida
         $partidas = $_SESSION['partidas'] ?? [];
         $panelPuntuacion = [];
         foreach ($partidas as $partida) {
@@ -138,7 +134,29 @@ if (isset($_SESSION['usuario'])) {
             die;
         }
     } 
-    else { //En cualquier otro caso
+elseif (isset($_REQUEST['botonpartidaportiempo'])) { // Se arranca una nueva partida
+    
+    $mensaje = isset($_GET['mensaje']) ? htmlspecialchars($_GET['mensaje']) : null; // si me redirigen a este script con algun mensaje
+    
+    // PARA USO CON REST
+    $rest = $_ENV['REST_ALMACEN_PALABRAS'];
+    $almacenPalabras = new AlmacenPalabrasRest($rest);
+
+    // PARA USO NORMAL
+    // $rutaFichero = $_ENV['RUTA_ALMACEN_PALABRAS'];
+    // $almacenPalabras = new AlmacenPalabrasFichero($rutaFichero);
+
+    $partida = new Hangman($almacenPalabras, MAX_NUM_ERRORES);
+    $_SESSION['partida'] = $partida;
+
+    // Guardamos la hora de inicio
+    $_SESSION['hora_inicio'] = new DateTime();
+
+    // Invoco la vista del juego para empezar a jugar
+    echo $blade->run("juego", compact('usuario', 'partida', 'mensaje'));
+    die;
+}
+ else { //En cualquier otro caso
         $partida = $_SESSION['partida'];
         echo $blade->run("juego", compact('usuario', 'partida'));
         die;
